@@ -1,0 +1,27 @@
+{
+	"compilerOptions": {
+		"incremental": true,
+		"target": "es2017",
+		"module": "commonjs",
+		"lib": ["dom"],
+		"allowJs": true,
+		"jsx": "preserve",
+		"sourceMap": true,
+		"outDir": "./lib",
+		"rootDir": "./",
+		"strict": true,
+		"moduleResolution": "node",
+		"baseUrl": "./",
+		"paths": {
+			"~/*": ["./src/*"]
+		},
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true,
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true
+	},
+	"ts-node": {
+		"files": true
+	}
+}
