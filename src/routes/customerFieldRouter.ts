@@ -6,7 +6,7 @@ import { Inject, Service } from "typedi";
 @Service()
 export class CustomFieldRouter implements RouterIstance {
 	constructor(
-		@Inject() private readonly server: typeof Hapi.Server,
+		@Inject("server") private readonly server: typeof Hapi.Server,
 		private readonly customFieldController: CustomFieldController
 	) {
 		this._basePath = "/customField";

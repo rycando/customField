@@ -6,16 +6,17 @@ import logger from "./tools/logger";
 
 @Service()
 export class App {
-	constructor(private readonly router: Router) {
+	constructor() {
 		this.server = Hapi.server({
 			port: PORT,
 			host: HOST,
 		});
-
 		Container.set("server", this.server);
+		this.router = Container.get(Router);
 	}
 
 	private server: Hapi.Server;
+	private router: Router;
 
 	public async start() {
 		await this.server.start();

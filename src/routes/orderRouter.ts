@@ -1,11 +1,12 @@
 import { RouterIstance } from "./routes";
 import * as Hapi from "@hapi/hapi";
 import { OrderController } from "~/Order";
-import { Inject } from "typedi";
+import { Inject, Service } from "typedi";
 
+@Service()
 export class OrderRouter implements RouterIstance {
 	constructor(
-		@Inject() private readonly server: typeof Hapi.Server,
+		@Inject("server") private readonly server: typeof Hapi.Server,
 		private readonly orderController: OrderController
 	) {
 		this._basePath = "/order";
@@ -14,7 +15,7 @@ export class OrderRouter implements RouterIstance {
 			{
 				method: "GET",
 				path: `${this._basePath}/`,
-				handler: this.orderController.getAllOrders(),
+				// handler: this.orderController.getAllOrders(),
 			},
 		];
 	}

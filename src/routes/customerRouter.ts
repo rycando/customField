@@ -6,7 +6,7 @@ import { Inject, Service } from "typedi";
 @Service()
 export class CustomerRouter implements RouterIstance {
 	constructor(
-		@Inject() private readonly server: typeof Hapi.Server,
+		@Inject("server") private readonly server: typeof Hapi.Server,
 		private readonly customerController: CustomerController
 	) {
 		this._basePath = "/order";

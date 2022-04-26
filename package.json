@@ -16,6 +16,7 @@
 		"winston": "^3.7.2"
 	},
 	"devDependencies": {
+		"@types/reflect-metadata": "^0.1.0",
 		"@types/chalk": "^2.2.0",
 		"@types/hapi__hapi": "^20.0.10",
 		"@types/mongoose": "^5.11.97",

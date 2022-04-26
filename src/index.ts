@@ -1,10 +1,9 @@
+import "reflect-metadata";
 import { App } from "./app";
 import logger from "./tools/logger";
-import "reflect-metadata";
-import Container from "typedi";
 
 (async () => {
-	const app = Container.get(App);
+	const app = new App();
 
 	app.start();
 
