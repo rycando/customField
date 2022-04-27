@@ -15,7 +15,17 @@ export class ProductRouter implements RouterIstance {
 			{
 				method: "GET",
 				path: `${this._basePath}/`,
-				// handler: this.productController.getAllProducts(),
+				handler: this.productController.getAllProducts,
+			},
+			{
+				method: "GET",
+				path: `${this._basePath}/{id}`,
+				handler: this.productController.getProductById,
+			},
+			{
+				method: "POST",
+				path: `${this._basePath}/`,
+				handler: this.productController.createNewProduct,
 			},
 		];
 	}

@@ -13,9 +13,17 @@ export interface RouterIstance {
 @Service()
 export class Router {
 	constructor(
+		@Inject("server") private readonly server: Hapi.Server,
 		private readonly orderRouter: OrderRouter,
 		private readonly customerRouter: CustomerRouter,
 		private readonly productRouter: ProductRouter,
 		private readonly storeRouter: StoreRouter
-	) {}
+	) {
+		this.server.route([
+			...this.customerRouter.routers,
+			...this.orderRouter.routers,
+			...this.productRouter.routers,
+			...this.storeRouter.routers,
+		]);
+	}
 }

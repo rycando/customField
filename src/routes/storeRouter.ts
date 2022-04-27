@@ -5,17 +5,24 @@ import { Inject, Service } from "typedi";
 
 @Service()
 export class StoreRouter implements RouterIstance {
-	constructor(
-		@Inject("server") private readonly server: typeof Hapi.Server,
-		private readonly storeController: StoreController
-	) {
+	constructor(private readonly storeController: StoreController) {
 		this._basePath = "/store";
 
 		this._routers = [
 			{
 				method: "GET",
 				path: `${this._basePath}/`,
-				// handler: this.storeController.getAllStores(),
+				handler: this.storeController.getAllStores,
+			},
+			{
+				method: "GET",
+				path: `${this._basePath}/{id}`,
+				handler: this.storeController.getStoreById,
+			},
+			{
+				method: "POST",
+				path: `${this._basePath}/`,
+				handler: this.storeController.createNewStore,
 			},
 		];
 	}

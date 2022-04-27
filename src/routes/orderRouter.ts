@@ -15,7 +15,17 @@ export class OrderRouter implements RouterIstance {
 			{
 				method: "GET",
 				path: `${this._basePath}/`,
-				// handler: this.orderController.getAllOrders(),
+				handler: this.orderController.getAllOrders,
+			},
+			{
+				method: "GET",
+				path: `${this._basePath}/{id}`,
+				handler: this.orderController.getOrderById,
+			},
+			{
+				method: "POST",
+				path: `${this._basePath}/`,
+				handler: this.orderController.createNewOrder,
 			},
 		];
 	}
