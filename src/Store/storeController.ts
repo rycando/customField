@@ -1,8 +1,8 @@
 import { Request, ResponseToolkit } from "@hapi/hapi";
-import { Service } from "typedi";
 import { StoreService } from "./storeService";
+import { injectable } from "tsyringe";
 
-@Service()
+@injectable()
 export class StoreController {
 	constructor(private readonly storeService: StoreService) {}
 
@@ -21,4 +21,6 @@ export class StoreController {
 			.response(await this.storeService.createNewStore(req.payload))
 			.code(201);
 	};
+
+	getStoreOrders = async (req: Request, h: ResponseToolkit) => {};
 }

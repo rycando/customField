@@ -1,7 +1,7 @@
 export enum Models {
-	Product = "Product",
+	PRODUCT = "PRODUCT",
 
-	Customer = "Customer",
+	CUSTOMER = "CUSTOMER",
 
-	Order = "Order",
+	ORDER = "ORDER",
 }

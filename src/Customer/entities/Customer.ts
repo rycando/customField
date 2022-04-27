@@ -1,6 +1,7 @@
 import { Document, Schema, model } from "mongoose";
 import mongooseTimestamp from "mongoose-timestamp";
 import mongooseDelete from "mongoose-delete";
+import { DocumentCustomValues, SchemaCustomValues } from "~/base/CustomValues";
 
 export interface DocumentCustomer extends Document {
 	store: Schema.Types.ObjectId;
@@ -10,6 +11,8 @@ export interface DocumentCustomer extends Document {
 	email: string;
 
 	password: string;
+
+	customValues: DocumentCustomValues[];
 }
 
 const SchemaCustomer = new Schema<DocumentCustomer>({
@@ -32,6 +35,10 @@ const SchemaCustomer = new Schema<DocumentCustomer>({
 	password: {
 		type: String,
 		required: true,
+	},
+	customValues: {
+		type: [SchemaCustomValues],
+		required: false,
 	},
 });
 

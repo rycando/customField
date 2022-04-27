@@ -1,12 +1,7 @@
 import { Document, Schema, model } from "mongoose";
 import mongooseTimestamp from "mongoose-timestamp";
 import mongooseDelete from "mongoose-delete";
-
-export interface DocumentCustomValues {
-	customField: Schema.Types.ObjectId;
-
-	value: any;
-}
+import { DocumentCustomValues, SchemaCustomValues } from "~/base/CustomValues";
 
 export interface DocumentProduct extends Document {
 	store: Schema.Types.ObjectId;
@@ -19,18 +14,6 @@ export interface DocumentProduct extends Document {
 
 	customValues: DocumentCustomValues[];
 }
-
-const SchemaCustomValues = new Schema({
-	customField: {
-		type: Schema.Types.ObjectId,
-		required: true,
-		index: true,
-	},
-	value: {
-		type: Schema.Types.Mixed,
-		required: true,
-	},
-});
 
 const SchemaProduct = new Schema<DocumentProduct>({
 	store: {

@@ -1,7 +1,7 @@
-import { Service } from "typedi";
 import { StoreRepository } from "./storeRepository";
+import { injectable } from "tsyringe";
 
-@Service()
+@injectable()
 export class StoreService {
 	constructor(private readonly storeRepository: StoreRepository) {}
 

@@ -1,6 +1,8 @@
 import { Document, Schema, model } from "mongoose";
 import mongooseTimestamp from "mongoose-timestamp";
 import mongooseDelete from "mongoose-delete";
+import { OrderStatus } from "~/base/OrderStatus";
+import { DocumentCustomValues, SchemaCustomValues } from "~/base/CustomValues";
 
 export interface DocumentOrder extends Document {
 	store: Schema.Types.ObjectId;
@@ -12,6 +14,8 @@ export interface DocumentOrder extends Document {
 	products: Schema.Types.ObjectId[];
 
 	price: number;
+
+	customValues: DocumentCustomValues[];
 }
 
 const SchemaOrder = new Schema<DocumentOrder>({
@@ -23,6 +27,7 @@ const SchemaOrder = new Schema<DocumentOrder>({
 	},
 	status: {
 		type: String,
+		enum: Object.values(OrderStatus),
 		required: true,
 		index: true,
 	},
@@ -40,6 +45,10 @@ const SchemaOrder = new Schema<DocumentOrder>({
 	price: {
 		type: Number,
 		required: true,
+	},
+	customValues: {
+		type: [SchemaCustomValues],
+		required: false,
 	},
 });
 

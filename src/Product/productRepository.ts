@@ -1,8 +1,8 @@
-import { Service } from "typedi";
 import { DocumentProduct, Product } from "./entities/Product";
 import { Repository } from "~/base/Repository";
+import { injectable } from "tsyringe";
 
-@Service()
+@injectable()
 export class ProductRepository implements Repository<DocumentProduct> {
 	async find(option?: any) {
 		return await Product.find(option);

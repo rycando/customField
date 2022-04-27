@@ -1,12 +1,18 @@
-import { RouterIstance } from "./routes";
+import { RouterIstance } from "../routes/routes";
 import * as Hapi from "@hapi/hapi";
 import { StoreController } from "~/Store";
-import { Inject, Service } from "typedi";
+import { OrderController } from "~/Order";
+import { injectable, inject, delay } from "tsyringe";
 
-@Service()
+@injectable()
 export class StoreRouter implements RouterIstance {
-	constructor(private readonly storeController: StoreController) {
-		this._basePath = "/store";
+	constructor(
+		@inject(delay(() => StoreController))
+		private readonly storeController: StoreController,
+		@inject(delay(() => OrderController))
+		private readonly orderController: OrderController
+	) {
+		this._basePath = "/stores";
 
 		this._routers = [
 			{
@@ -18,6 +24,11 @@ export class StoreRouter implements RouterIstance {
 				method: "GET",
 				path: `${this._basePath}/{id}`,
 				handler: this.storeController.getStoreById,
+			},
+			{
+				method: "GET",
+				path: `${this._basePath}/{id}/orders`,
+				handler: this.orderController.getStoreOrders,
 			},
 			{
 				method: "POST",

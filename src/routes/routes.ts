@@ -1,19 +1,20 @@
+import { inject } from "tsyringe";
 import * as Hapi from "@hapi/hapi";
-import { Inject, Service } from "typedi";
-import { CustomerRouter } from "./customerRouter";
-import { OrderRouter } from "./orderRouter";
-import { ProductRouter } from "./productRouter";
-import { StoreRouter } from "./storeRouter";
+import { CustomerRouter } from "~/Customer/";
+import { OrderRouter } from "~/Order/";
+import { ProductRouter } from "~/Product/";
+import { StoreRouter } from "~/Store/";
+import { injectable } from "tsyringe";
 
 export interface RouterIstance {
 	routers: Hapi.ServerRoute[];
 	basePath: string;
 }
 
-@Service()
+@injectable()
 export class Router {
 	constructor(
-		@Inject("server") private readonly server: Hapi.Server,
+		@inject("server") private readonly server: Hapi.Server,
 		private readonly orderRouter: OrderRouter,
 		private readonly customerRouter: CustomerRouter,
 		private readonly productRouter: ProductRouter,

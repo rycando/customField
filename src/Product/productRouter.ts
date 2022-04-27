@@ -1,15 +1,15 @@
-import { RouterIstance } from "./routes";
+import { RouterIstance } from "../routes/routes";
 import * as Hapi from "@hapi/hapi";
 import { ProductController } from "~/Product";
-import { Inject, Service } from "typedi";
+import { injectable, inject, delay } from "tsyringe";
 
-@Service()
+@injectable()
 export class ProductRouter implements RouterIstance {
 	constructor(
-		@Inject("server") private readonly server: typeof Hapi.Server,
+		@inject(delay(() => ProductController))
 		private readonly productController: ProductController
 	) {
-		this._basePath = "/product";
+		this._basePath = "/products";
 
 		this._routers = [
 			{

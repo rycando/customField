@@ -1,8 +1,8 @@
-import { Service } from "typedi";
 import { Repository } from "~/base/Repository";
 import { DocumentStore, Store } from "./entities/Store";
+import { injectable } from "tsyringe";
 
-@Service()
+@injectable()
 export class StoreRepository implements Repository<DocumentStore> {
 	async find(option?: any) {
 		return await Store.find(option);

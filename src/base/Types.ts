@@ -1,15 +1,11 @@
 export enum Types {
-	Number = "Number",
+	number = "number",
 
-	String = "String",
+	string = "string",
 
-	Object = "Object",
+	object = "object",
 
-	Array = "Array",
-
-	ObjectId = "ObjectId",
-
-	Boolean = "Boolean",
+	boolean = "boolean",
 
 	Date = "Date",
 }

@@ -1,8 +1,13 @@
 import { Request, ResponseToolkit } from "@hapi/hapi";
-import { Service } from "typedi";
 import { CustomerService } from "./customerService";
+import { injectable } from "tsyringe";
+import {
+	createCustomerDTO,
+	createCustomerSchema,
+} from "./dto/createCustomerDTO";
+import logger from "~/tools/logger";
 
-@Service()
+@injectable()
 export class CustomerController {
 	constructor(private readonly customerService: CustomerService) {}
 
@@ -20,8 +25,24 @@ export class CustomerController {
 	};
 
 	createNewCustomer = async (req: Request, h: ResponseToolkit) => {
-		return h
-			.response(await this.customerService.createNewCustomer(req.payload))
-			.code(201);
+		createCustomerSchema.validate(req.payload).catch((err) => {
+			logger.info(
+				`Log 48709: createCustomerSchema validation Failed - ${err}`
+			);
+
+			return h
+				.response("createCustomerSchema validation Failed")
+				.code(400);
+		});
+
+		return this.customerService
+			.createNewCustomer(req.payload as createCustomerDTO)
+			.then((newCustomer) => {
+				return h.response(newCustomer).code(201);
+			})
+			.catch((err) => {
+				logger.info(`Log 247: ${err}`);
+				return h.response(err).code(400);
+			});
 	};
 }

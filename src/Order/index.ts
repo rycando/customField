@@ -1,4 +1,5 @@
-export * from "./entities/Order";
+export * from "./orderRouter";
 export * from "./orderController";
-export * from "./orderRepository";
 export * from "./orderService";
+export * from "./orderRepository";
+export * from "./entities/Order";

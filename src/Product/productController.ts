@@ -1,8 +1,10 @@
 import { Request, ResponseToolkit } from "@hapi/hapi";
-import { Service } from "typedi";
 import { ProductService } from "./productService";
+import { injectable } from "tsyringe";
+import { createProductDTO, createProductSchema } from "./dto";
+import logger from "~/tools/logger";
 
-@Service()
+@injectable()
 export class ProductController {
 	constructor(private readonly productService: ProductService) {}
 
@@ -18,8 +20,24 @@ export class ProductController {
 	};
 
 	createNewProduct = async (req: Request, h: ResponseToolkit) => {
-		return h
-			.response(await this.productService.createNewProduct(req.payload))
-			.code(201);
+		createProductSchema.validate(req.payload).catch((err) => {
+			logger.info(
+				`Log 53288: createProductSchema validation Failed - ${err}`
+			);
+
+			return h
+				.response("createProductSchema validation Failed")
+				.code(400);
+		});
+
+		return this.productService
+			.createNewProduct(req.payload as createProductDTO)
+			.then((newProduct) => {
+				return h.response(newProduct).code(201);
+			})
+			.catch((err) => {
+				logger.info(`Log 59719: ${err}`);
+				return h.response(err).code(400);
+			});
 	};
 }

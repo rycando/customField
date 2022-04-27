@@ -1,7 +1,7 @@
-import { Service } from "typedi";
-import { DocumentOrder, Order } from "./entities/Order";
+import { Order } from "./entities/Order";
+import { injectable } from "tsyringe";
 
-@Service()
+@injectable()
 export class OrderRepository {
 	async find(option?: any) {
 		return await Order.find(option);
@@ -13,5 +13,14 @@ export class OrderRepository {
 		return await Order.create({
 			...payload,
 		});
+	}
+	async findOneAndUpdate(id: string, payload: any) {
+		return await Order.findOneAndUpdate(
+			{
+				_id: id,
+			},
+			{ ...payload },
+			{ new: true }
+		);
 	}
 }
