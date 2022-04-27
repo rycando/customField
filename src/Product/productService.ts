@@ -11,6 +11,7 @@ import { Types } from "~/base/Types";
 export class ProductService {
 	constructor(
 		private readonly productRepository: ProductRepository,
+		@inject(delay(() => StoreService))
 		private readonly storeService: StoreService,
 		private readonly customFieldService: CustomFieldService
 	) {}

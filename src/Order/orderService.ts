@@ -20,7 +20,9 @@ export class OrderService {
 		private readonly orderRepository: OrderRepository,
 		@inject(delay(() => OrderStateMachine))
 		private readonly orderStateMachine: OrderStateMachine,
+		@inject(delay(() => StoreService))
 		private readonly storeService: StoreService,
+		@inject(delay(() => CustomerService))
 		private readonly customerService: CustomerService,
 		private readonly productService: ProductService,
 		private readonly customFieldService: CustomFieldService
