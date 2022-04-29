@@ -1,0 +1,3548 @@
+{
+	"info": {
+		"_postman_id": "a7657215-1c18-45c1-8337-40bfa9b16e68",
+		"name": "[TEST] customField",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "------------------------------------------------ Store",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "000_store_새 스토어 생성_A",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var schema = {",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"      \"name\": { \"type\": \"string\" },",
+							"      \"_id\": { \"type\": \"string\" },",
+							"      \"deleted\": { \"type\": \"boolean\" },",
+							"  },",
+							"  \"required\": [\"name\", \"_id\", \"deleted\"]",
+							"}",
+							"",
+							"pm.variables.set(\"schema\", schema);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var Ajv = require('ajv'), ajv = new Ajv({logger: console});",
+							"var _ = require('lodash')",
+							"",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var schema = pm.variables.get(\"schema\");",
+							"    pm.expect(ajv.validate(schema, pm.response.json()), JSON.stringify(ajv.errors)).to.be.true;",
+							"});",
+							"",
+							"pm.test('createStore is valid', function() {",
+							"    const data = pm.response.json();",
+							"",
+							"    const newStore = data;",
+							"",
+							"    pm.collectionVariables.set('storeA', newStore._id);",
+							"    ",
+							"    // 초기 생성 데이터 초기값 일치 여부",
+							"    pm.expect(newStore.deleted).to.be.false;",
+							"});",
+							"",
+							"pm.test('duplicated storeName returns 400', function() {",
+							"    pm.sendRequest({",
+							"        url: 'localhost:3000/stores/',",
+							"        method: 'POST',",
+							"        header: {",
+							"            'Content-Type': 'application/json'",
+							"        },",
+							"        body: {",
+							"            mode: 'raw',",
+							"            raw: JSON.stringify({ name: \"testStoreA\" })",
+							"        }",
+							"    }, (err, resp) => {",
+							"        pm.expect(resp.code).to.equal(400)",
+							"    })",
+							"})",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"testStoreA\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/stores/",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"stores",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "000_store_새 스토어 생성_B",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var schema = {",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"      \"name\": { \"type\": \"string\" },",
+							"      \"_id\": { \"type\": \"string\" },",
+							"      \"deleted\": { \"type\": \"boolean\" },",
+							"  },",
+							"  \"required\": [\"name\", \"_id\", \"deleted\"]",
+							"}",
+							"",
+							"pm.variables.set(\"schema\", schema);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var Ajv = require('ajv'), ajv = new Ajv({logger: console});",
+							"var _ = require('lodash')",
+							"",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var schema = pm.variables.get(\"schema\");",
+							"    pm.expect(ajv.validate(schema, pm.response.json()), JSON.stringify(ajv.errors)).to.be.true;",
+							"});",
+							"",
+							"pm.test('createStore is valid', function() {",
+							"    const data = pm.response.json();",
+							"",
+							"    const newStore = data;",
+							"",
+							"    pm.collectionVariables.set('storeB', newStore._id);",
+							"    ",
+							"    // 초기 생성 데이터 초기값 일치 여부",
+							"    pm.expect(newStore.deleted).to.be.false;",
+							"});",
+							"",
+							"pm.test('duplicated storeName returns 400', function() {",
+							"    pm.sendRequest({",
+							"        url: 'localhost:3000/stores/',",
+							"        method: 'POST',",
+							"        header: {",
+							"            'Content-Type': 'application/json'",
+							"        },",
+							"        body: {",
+							"            mode: 'raw',",
+							"            raw: JSON.stringify({ name: \"testStoreB\" })",
+							"        }",
+							"    })",
+							"})",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"testStoreB\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/stores/",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"stores",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "000_store_새 스토어 생성_C",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var schema = {",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"      \"name\": { \"type\": \"string\" },",
+							"      \"_id\": { \"type\": \"string\" },",
+							"      \"deleted\": { \"type\": \"boolean\" },",
+							"  },",
+							"  \"required\": [\"name\", \"_id\", \"deleted\"]",
+							"}",
+							"",
+							"pm.variables.set(\"schema\", schema);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var Ajv = require('ajv'), ajv = new Ajv({logger: console});",
+							"var _ = require('lodash')",
+							"",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var schema = pm.variables.get(\"schema\");",
+							"    pm.expect(ajv.validate(schema, pm.response.json()), JSON.stringify(ajv.errors)).to.be.true;",
+							"});",
+							"",
+							"pm.test('createStore is valid', function() {",
+							"    const data = pm.response.json();",
+							"",
+							"    const newStore = data;",
+							"",
+							"    pm.collectionVariables.set('storeC', newStore._id);",
+							"    ",
+							"    // 초기 생성 데이터 초기값 일치 여부",
+							"    pm.expect(newStore.deleted).to.be.false;",
+							"});",
+							"",
+							"pm.test('duplicated storeName returns 400', function() {",
+							"    pm.sendRequest({",
+							"        url: 'localhost:3000/stores/',",
+							"        method: 'POST',",
+							"        header: {",
+							"            'Content-Type': 'application/json'",
+							"        },",
+							"        body: {",
+							"            mode: 'raw',",
+							"            raw: JSON.stringify({ name: \"testStoreC\" })",
+							"        }",
+							"    })",
+							"})",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"testStoreC\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/stores/",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"stores",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "000_store_새 스토어 생성_D",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var schema = {",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"      \"name\": { \"type\": \"string\" },",
+							"      \"_id\": { \"type\": \"string\" },",
+							"      \"deleted\": { \"type\": \"boolean\" },",
+							"  },",
+							"  \"required\": [\"name\", \"_id\", \"deleted\"]",
+							"}",
+							"",
+							"pm.variables.set(\"schema\", schema);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var Ajv = require('ajv'), ajv = new Ajv({logger: console});",
+							"var _ = require('lodash')",
+							"",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var schema = pm.variables.get(\"schema\");",
+							"    pm.expect(ajv.validate(schema, pm.response.json()), JSON.stringify(ajv.errors)).to.be.true;",
+							"});",
+							"",
+							"pm.test('createStore is valid', function() {",
+							"    const data = pm.response.json();",
+							"",
+							"    const newStore = data;",
+							"",
+							"    pm.collectionVariables.set('storeD', newStore._id);",
+							"    ",
+							"    // 초기 생성 데이터 초기값 일치 여부",
+							"    pm.expect(newStore.deleted).to.be.false;",
+							"});",
+							"",
+							"pm.test('duplicated storeName returns 400', function() {",
+							"    pm.sendRequest({",
+							"        url: 'localhost:3000/stores/',",
+							"        method: 'POST',",
+							"        header: {",
+							"            'Content-Type': 'application/json'",
+							"        },",
+							"        body: {",
+							"            mode: 'raw',",
+							"            raw: JSON.stringify({ name: \"testStoreD\" })",
+							"        }",
+							"    })",
+							"})",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"testStoreD\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/stores/",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"stores",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "000_store_새 스토어 생성_E",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var schema = {",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"      \"name\": { \"type\": \"string\" },",
+							"      \"_id\": { \"type\": \"string\" },",
+							"      \"deleted\": { \"type\": \"boolean\" },",
+							"  },",
+							"  \"required\": [\"name\", \"_id\", \"deleted\"]",
+							"}",
+							"",
+							"pm.variables.set(\"schema\", schema);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var Ajv = require('ajv'), ajv = new Ajv({logger: console});",
+							"var _ = require('lodash')",
+							"",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var schema = pm.variables.get(\"schema\");",
+							"    pm.expect(ajv.validate(schema, pm.response.json()), JSON.stringify(ajv.errors)).to.be.true;",
+							"});",
+							"",
+							"pm.test('createStore is valid', function() {",
+							"    const data = pm.response.json();",
+							"",
+							"    const newStore = data;",
+							"",
+							"    pm.collectionVariables.set('storeE', newStore._id);",
+							"    ",
+							"    // 초기 생성 데이터 초기값 일치 여부",
+							"    pm.expect(newStore.deleted).to.be.false;",
+							"});",
+							"",
+							"pm.test('duplicated storeName returns 400', function() {",
+							"    pm.sendRequest({",
+							"        url: 'localhost:3000/stores/',",
+							"        method: 'POST',",
+							"        header: {",
+							"            'Content-Type': 'application/json'",
+							"        },",
+							"        body: {",
+							"            mode: 'raw',",
+							"            raw: JSON.stringify({ name: \"testStoreE\" })",
+							"        }",
+							"    })",
+							"})",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"testStoreE\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/stores/",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"stores",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "000_store_새 스토어 생성_F",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var schema = {",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"      \"name\": { \"type\": \"string\" },",
+							"      \"_id\": { \"type\": \"string\" },",
+							"      \"deleted\": { \"type\": \"boolean\" },",
+							"  },",
+							"  \"required\": [\"name\", \"_id\", \"deleted\"]",
+							"}",
+							"",
+							"pm.variables.set(\"schema\", schema);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var Ajv = require('ajv'), ajv = new Ajv({logger: console});",
+							"var _ = require('lodash')",
+							"",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var schema = pm.variables.get(\"schema\");",
+							"    pm.expect(ajv.validate(schema, pm.response.json()), JSON.stringify(ajv.errors)).to.be.true;",
+							"});",
+							"",
+							"pm.test('createStore is valid', function() {",
+							"    const data = pm.response.json();",
+							"",
+							"    const newStore = data;",
+							"",
+							"    pm.collectionVariables.set('storeF', newStore._id);",
+							"    ",
+							"    // 초기 생성 데이터 초기값 일치 여부",
+							"    pm.expect(newStore.deleted).to.be.false;",
+							"});",
+							"",
+							"pm.test('duplicated storeName returns 400', function() {",
+							"    pm.sendRequest({",
+							"        url: 'localhost:3000/stores/',",
+							"        method: 'POST',",
+							"        header: {",
+							"            'Content-Type': 'application/json'",
+							"        },",
+							"        body: {",
+							"            mode: 'raw',",
+							"            raw: JSON.stringify({ name: \"testStoreF\" })",
+							"        }",
+							"    })",
+							"})",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"testStoreF\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/stores/",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"stores",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "001_store_\b생성된 스토어 불러오기",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var schema = {",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"      \"name\": { \"type\": \"string\" },",
+							"      \"_id\": { \"type\": \"string\" },",
+							"      \"deleted\": { \"type\": \"boolean\" },",
+							"  },",
+							"  \"required\": [\"name\", \"_id\", \"deleted\"]",
+							"}",
+							"",
+							"pm.variables.set(\"schema\", schema);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var Ajv = require('ajv'), ajv = new Ajv({logger: console});",
+							"var _ = require('lodash')",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var schema = pm.variables.get(\"schema\");",
+							"    pm.expect(ajv.validate(schema, pm.response.json()), JSON.stringify(ajv.errors)).to.be.true;",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/stores/{{store}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"stores",
+						"{{store}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "002_store_\b생성된 스토어 모두 불러오기",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var schema = {",
+							"    \"type\": \"array\",",
+							"    \"items\": [{",
+							"        \"type\": \"object\",",
+							"        \"properties\": {",
+							"            \"name\": { \"type\": \"string\" },",
+							"            \"_id\": { \"type\": \"string\" },",
+							"            \"deleted\": { \"type\": \"boolean\" },",
+							"        },",
+							"        \"required\": [\"name\", \"_id\", \"deleted\"]",
+							"    }",
+							"  ]",
+							"}",
+							"",
+							"pm.variables.set(\"schema\", schema);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var Ajv = require('ajv'), ajv = new Ajv({logger: console});",
+							"var _ = require('lodash')",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var schema = pm.variables.get(\"schema\");",
+							"    pm.expect(ajv.validate(schema, pm.response.json()), JSON.stringify(ajv.errors)).to.be.true;",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/stores/",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"stores",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "003_store_해당 스토어 상품 모두 불러오기",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var schema = {",
+							"    \"type\": \"array\",",
+							"    \"items\": [{",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"      \"_id\": { \"type\": \"string\" },",
+							"      \"name\": { \"type\": \"string\" },",
+							"      \"price\": { \"type\": \"number\" },",
+							"      \"categories\": {",
+							"          \"type\": \"array\",",
+							"          \"items\": [{\"type\" : \"string\"} ]",
+							"        },",
+							"      \"customValues\": {",
+							"          \"type\": \"array\",",
+							"          \"items\": [{",
+							"            \"type\": \"object\",",
+							"            \"properties\": {",
+							"                \"customField\": {",
+							"                    \"type\": \"object\",",
+							"                    \"properties\": {",
+							"                        \"_id\": { \"type\": \"string\" },",
+							"                        \"fieldName\": { \"type\": \"string\" },",
+							"                        \"type\": { \"type\": \"string\", \"enum\": [\"string\", \"number\", \"object\", \"boolean\", \"Date\"] },",
+							"                        \"required\": { \"type\": \"boolean\" },",
+							"                    },",
+							"                    \"required\": [\"_id\", \"fieldName\", \"type\", \"required\"]},",
+							"                \"value\": { \"type\": [\"string\", \"number\", \"boolean\", \"object\"] }",
+							"            },",
+							"            \"required\": [\"customField\", \"value\"]",
+							"      }] },",
+							"  },",
+							"  \"required\": [\"_id\", \"name\", \"price\", \"categories\"]",
+							"    }]",
+							"}",
+							"",
+							"pm.variables.set(\"schema\", schema);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var Ajv = require('ajv'), ajv = new Ajv({logger: console});",
+							"var _ = require('lodash')",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var schema = pm.variables.get(\"schema\");",
+							"    pm.expect(ajv.validate(schema, pm.response.json()), JSON.stringify(ajv.errors)).to.be.true;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/stores/{{storeA}}/products",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"stores",
+						"{{storeA}}",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "004_store_해당 스토어 고객 모두 불러오기",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var schema = {",
+							"    \"type\":\"array\",",
+							"    \"items\": [{",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"      \"_id\": { \"type\": \"string\" },",
+							"      \"name\": { \"type\": \"string\" },",
+							"      \"email\": { \"type\": \"string\", \"format\": \"email\" },",
+							"      \"customValues\": {",
+							"          \"type\": \"array\",",
+							"          \"items\": [{",
+							"            \"type\": \"object\",",
+							"            \"properties\": {",
+							"                \"customField\": {",
+							"                    \"type\": \"object\",",
+							"                    \"properties\": {",
+							"                        \"_id\": { \"type\": \"string\" },",
+							"                        \"fieldName\": { \"type\": \"string\" },",
+							"                        \"type\": { \"type\": \"string\", \"enum\": [\"string\", \"number\", \"object\", \"boolean\", \"Date\"] },",
+							"                        \"required\": { \"type\": \"boolean\" },",
+							"                    },",
+							"                    \"required\": [\"_id\", \"fieldName\", \"type\", \"required\"]},",
+							"                \"value\": { \"type\": [\"string\", \"number\", \"boolean\", \"object\"] }",
+							"            },",
+							"            \"required\": [\"customField\", \"value\"]",
+							"      }] },",
+							"  },",
+							"  \"required\": [\"_id\", \"name\", \"email\"]",
+							"}]}",
+							"",
+							"pm.variables.set(\"schema\", schema);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var Ajv = require('ajv'), ajv = new Ajv({logger: console});",
+							"var _ = require('lodash')",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var schema = pm.variables.get(\"schema\");",
+							"    pm.expect(ajv.validate(schema, pm.response.json()), JSON.stringify(ajv.errors)).to.be.true;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/stores/{{storeC}}/customers",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"stores",
+						"{{storeC}}",
+						"customers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "005_store_해당 스토어 주문 모두 불러오기",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var schema = {",
+							"    \"type\":\"array\",",
+							"    \"items\": [{",
+							"    \"type\": \"object\",",
+							"    \"properties\": {",
+							"        \"_id\": { \"type\": \"string\" },",
+							"        \"status\": { \"type\": \"string\" },",
+							"        \"customer\": {",
+							"            \"type\": \"object\", ",
+							"        ",
+							"            \"properties\": {",
+							"            \"_id\": { \"type\": \"string\" },",
+							"            \"name\": { \"type\": \"string\" },",
+							"            \"email\": { \"type\": \"string\", \"format\": \"email\" },",
+							"            \"customValues\": {",
+							"                \"type\": \"array\",",
+							"                \"items\": [{",
+							"                    \"type\": \"object\",",
+							"                    \"properties\": {",
+							"                        \"customField\": {",
+							"                            \"type\": \"object\",",
+							"                            \"properties\": {",
+							"                                \"_id\": { \"type\": \"string\" },",
+							"                                \"fieldName\": { \"type\": \"string\" },",
+							"                                \"type\": { \"type\": \"string\", \"enum\": [\"string\", \"number\", \"object\", \"boolean\", \"Date\"] },",
+							"                                \"required\": { \"type\": \"boolean\" },",
+							"                            },",
+							"                            \"required\": [\"_id\", \"fieldName\", \"type\", \"required\"]},",
+							"                        \"value\": { \"type\": [\"string\", \"number\", \"boolean\", \"object\"] }",
+							"                    },",
+							"                    \"required\": [\"customField\", \"value\"]",
+							"                }]",
+							"            },",
+							"            },",
+							"            \"required\": [\"_id\", \"name\", \"email\" ]",
+							"        },",
+							"        \"price\": { \"type\": \"number\" },",
+							"        \"customValues\": {",
+							"            \"type\": \"array\",",
+							"            \"items\": [{",
+							"                \"type\": \"object\",",
+							"                \"properties\": {",
+							"                    \"customField\": {",
+							"                        \"type\": \"object\",",
+							"                        \"properties\": {",
+							"                            \"_id\": { \"type\": \"string\" },",
+							"                            \"fieldName\": { \"type\": \"string\" },",
+							"                            \"type\": { \"type\": \"string\", \"enum\": [\"string\", \"number\", \"object\", \"boolean\", \"Date\"] },",
+							"                            \"required\": { \"type\": \"boolean\" },",
+							"                        },",
+							"                        \"required\": [\"_id\", \"fieldName\", \"type\", \"required\"]},",
+							"                    \"value\": { \"type\": [\"string\", \"number\", \"boolean\", \"object\"] }",
+							"                },",
+							"                \"required\": [\"customField\", \"value\"]",
+							"        }] },",
+							"        \"products\": {",
+							"            \"type\": \"array\",",
+							"            \"items\": [{",
+							"                \"type\": \"object\",",
+							"                \"properties\": {",
+							"                    \"_id\": { \"type\": \"string\" },",
+							"                    \"name\": { \"type\": \"string\" },",
+							"                    \"price\": { \"type\": \"number\" },",
+							"                    \"categories\": {",
+							"                        \"type\": \"array\",",
+							"                        \"items\": [{\"type\" : \"string\"}]",
+							"                    },",
+							"                    \"customValues\": {",
+							"                        \"type\": \"array\",",
+							"                        \"items\": [{",
+							"                            \"type\": \"object\",",
+							"                            \"properties\": {",
+							"                                \"customField\": {",
+							"                                    \"type\": \"object\",",
+							"                                    \"properties\": {",
+							"                                        \"_id\": { \"type\": \"string\" },",
+							"                                \"fieldName\": { \"type\": \"string\" },",
+							"                            \"type\": { \"type\": \"string\", \"enum\": [\"string\", \"number\", \"object\", \"boolean\", \"Date\"] },",
+							"                            \"required\": { \"type\": \"boolean\" },",
+							"                        },",
+							"                        \"required\": [\"_id\", \"fieldName\", \"type\", \"required\"]},",
+							"                    \"value\": { \"type\": [\"string\", \"number\", \"boolean\", \"object\"] }",
+							"                },",
+							"                \"required\": [\"customField\", \"value\"]",
+							"            }] },",
+							"            },",
+							"            \"required\": [\"_id\", \"name\", \"price\", \"categories\"]",
+							"        }]",
+							"    }",
+							"  },",
+							"  \"required\": [\"_id\", \"status\", \"customer\", \"price\"]}]",
+							"}",
+							"",
+							"pm.variables.set(\"schema\", schema);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var Ajv = require('ajv'), ajv = new Ajv({logger: console});",
+							"var _ = require('lodash')",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var schema = pm.variables.get(\"schema\");",
+							"    pm.expect(ajv.validate(schema, pm.response.json()), JSON.stringify(ajv.errors)).to.be.true;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/stores/{{storeE}}/orders",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"stores",
+						"{{storeE}}",
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "006_store_스토어 정보 업데이트",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var schema = {",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"      \"name\": { \"type\": \"string\" },",
+							"      \"_id\": { \"type\": \"string\" },",
+							"      \"deleted\": { \"type\": \"boolean\" },",
+							"  },",
+							"  \"required\": [\"name\", \"_id\", \"deleted\"]",
+							"}",
+							"",
+							"pm.variables.set(\"schema\", schema);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var Ajv = require('ajv'), ajv = new Ajv({logger: console});",
+							"var _ = require('lodash')",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var schema = pm.variables.get(\"schema\");",
+							"    pm.expect(ajv.validate(schema, pm.response.json()), JSON.stringify(ajv.errors)).to.be.true;",
+							"});",
+							"",
+							"pm.test('updateStore is valid', function() {",
+							"    const data = pm.response.json();",
+							"",
+							"    const newStore = data;",
+							"",
+							"    pm.collectionVariables.set('storeA', newStore._id);",
+							"    ",
+							"    // 초기 생성 데이터 초기값 일치 여부",
+							"    pm.expect(newStore.deleted).to.be.false;",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"testStoreA_modified\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/stores/{{storeA}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"stores",
+						"{{storeA}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "------------------------------------------------ CustomField",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "100_customField_새 사용자 정의 필드 생성_product_1",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var schema = {",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"      \"_id\": { \"type\": \"string\" },",
+							"      \"store\": { \"type\": \"string\" },",
+							"      \"fieldName\": { \"type\": \"string\" },",
+							"      \"onModel\": { \"type\": \"string\", \"enum\": [\"Product\", \"Order\", \"Customer\"] },",
+							"      \"type\": { \"type\": \"string\", \"enum\": [\"string\", \"number\", \"object\", \"boolean\", \"Date\"] },",
+							"      \"required\": { \"type\": \"boolean\" },",
+							"      \"deleted\": { \"type\": \"boolean\" },",
+							"  },",
+							"  \"required\": [\"_id\", \"store\", \"fieldName\", \"onModel\", \"type\", \"required\", \"deleted\"]",
+							"}",
+							"",
+							"pm.variables.set(\"schema\", schema);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var Ajv = require('ajv'), ajv = new Ajv({logger: console});",
+							"var _ = require('lodash')",
+							"",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var schema = pm.variables.get(\"schema\");",
+							"    pm.expect(ajv.validate(schema, pm.response.json()), JSON.stringify(ajv.errors)).to.be.true;",
+							"});",
+							"",
+							"pm.test('createCustomField is valid', function() {",
+							"    const data = pm.response.json();",
+							"",
+							"    const newCustomField = data;",
+							"",
+							"    pm.collectionVariables.set('customField_product_1', newCustomField._id);",
+							"    ",
+							"    // 초기 생성 데이터 초기값 일치 여부",
+							"    pm.expect(newCustomField.deleted).to.be.false;",
+							"});",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"store\": \"{{storeA}}\",\n    \"fieldName\": \"도서 발행일\",\n    \"onModel\": \"Product\",\n    \"type\": \"Date\",\n    \"required\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/customFields/",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"customFields",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "100_customField_새 사용자 정의 필드 생성_product_2",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var schema = {",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"      \"_id\": { \"type\": \"string\" },",
+							"      \"store\": { \"type\": \"string\" },",
+							"      \"fieldName\": { \"type\": \"string\" },",
+							"      \"onModel\": { \"type\": \"string\", \"enum\": [\"Product\", \"Order\", \"Customer\"] },",
+							"      \"type\": { \"type\": \"string\", \"enum\": [\"string\", \"number\", \"object\", \"boolean\", \"Date\"]},",
+							"      \"required\": { \"type\": \"boolean\" },",
+							"      \"deleted\": { \"type\": \"boolean\" },",
+							"  },",
+							"  \"required\": [\"_id\", \"store\", \"fieldName\", \"onModel\", \"type\", \"required\", \"deleted\"]",
+							"}",
+							"",
+							"pm.variables.set(\"schema\", schema);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var Ajv = require('ajv'), ajv = new Ajv({logger: console});",
+							"var _ = require('lodash')",
+							"",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var schema = pm.variables.get(\"schema\");",
+							"    pm.expect(ajv.validate(schema, pm.response.json()), JSON.stringify(ajv.errors)).to.be.true;",
+							"});",
+							"",
+							"pm.test('createCustomField is valid', function() {",
+							"    const data = pm.response.json();",
+							"",
+							"    const newCustomField = data;",
+							"",
+							"    pm.collectionVariables.set('customField_product_2', newCustomField._id);",
+							"    ",
+							"    // 초기 생성 데이터 초기값 일치 여부",
+							"    pm.expect(newCustomField.deleted).to.be.false;",
+							"});",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"store\": \"{{storeB}}\",\n    \"fieldName\": \"유통기한\",\n    \"onModel\": \"Product\",\n    \"type\": \"Date\",\n    \"required\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/customFields/",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"customFields",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "100_customField_새 사용자 정의 필드 생성_customer_1",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var schema = {",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"      \"_id\": { \"type\": \"string\" },",
+							"      \"store\": { \"type\": \"string\" },",
+							"      \"fieldName\": { \"type\": \"string\" },",
+							"      \"onModel\": { \"type\": \"string\", \"enum\": [\"Product\", \"Order\", \"Customer\"] },",
+							"      \"type\": { \"type\": \"string\", \"enum\": [\"string\", \"number\", \"object\", \"boolean\", \"Date\"]},",
+							"      \"required\": { \"type\": \"boolean\" },",
+							"      \"deleted\": { \"type\": \"boolean\" },",
+							"  },",
+							"  \"required\": [\"_id\", \"store\", \"fieldName\", \"onModel\", \"type\", \"required\", \"deleted\"]",
+							"}",
+							"",
+							"pm.variables.set(\"schema\", schema);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var Ajv = require('ajv'), ajv = new Ajv({logger: console});",
+							"var _ = require('lodash')",
+							"",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var schema = pm.variables.get(\"schema\");",
+							"    pm.expect(ajv.validate(schema, pm.response.json()), JSON.stringify(ajv.errors)).to.be.true;",
+							"});",
+							"",
+							"pm.test('createCustomField is valid', function() {",
+							"    const data = pm.response.json();",
+							"",
+							"    const newCustomField = data;",
+							"",
+							"    pm.collectionVariables.set('customField_customer_1', newCustomField._id);",
+							"    ",
+							"    // 초기 생성 데이터 초기값 일치 여부",
+							"    pm.expect(newCustomField.deleted).to.be.false;",
+							"});",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"store\": \"{{storeC}}\",\n    \"fieldName\": \"전화번호\",\n    \"onModel\": \"Customer\",\n    \"type\": \"string\",\n    \"required\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/customFields/",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"customFields",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "100_customField_새 사용자 정의 필드 생성_customer_2",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var schema = {",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"      \"_id\": { \"type\": \"string\" },",
+							"      \"store\": { \"type\": \"string\" },",
+							"      \"fieldName\": { \"type\": \"string\" },",
+							"      \"onModel\": { \"type\": \"string\", \"enum\": [\"Product\", \"Order\", \"Customer\"] },",
+							"      \"type\": { \"type\": \"string\", \"enum\": [\"string\", \"number\", \"object\", \"boolean\", \"Date\"]},",
+							"      \"required\": { \"type\": \"boolean\" },",
+							"      \"deleted\": { \"type\": \"boolean\" },",
+							"  },",
+							"  \"required\": [\"_id\", \"store\", \"fieldName\", \"onModel\", \"type\", \"required\", \"deleted\"]",
+							"}",
+							"",
+							"pm.variables.set(\"schema\", schema);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var Ajv = require('ajv'), ajv = new Ajv({logger: console});",
+							"var _ = require('lodash')",
+							"",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var schema = pm.variables.get(\"schema\");",
+							"    pm.expect(ajv.validate(schema, pm.response.json()), JSON.stringify(ajv.errors)).to.be.true;",
+							"});",
+							"",
+							"pm.test('createCustomField is valid', function() {",
+							"    const data = pm.response.json();",
+							"",
+							"    const newCustomField = data;",
+							"",
+							"    pm.collectionVariables.set('customField_customer_2', newCustomField._id);",
+							"    ",
+							"    // 초기 생성 데이터 초기값 일치 여부",
+							"    pm.expect(newCustomField.deleted).to.be.false;",
+							"});",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"store\": \"{{storeD}}\",\n    \"fieldName\": \"성별\",\n    \"onModel\": \"Customer\",\n    \"type\": \"string\",\n    \"required\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/customFields/",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"customFields",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "100_customField_새 사용자 정의 필드 생성_order_1",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var schema = {",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"      \"_id\": { \"type\": \"string\" },",
+							"      \"store\": { \"type\": \"string\" },",
+							"      \"fieldName\": { \"type\": \"string\" },",
+							"      \"onModel\": { \"type\": \"string\", \"enum\": [\"Product\", \"Order\", \"Customer\"] },",
+							"      \"type\": { \"type\": \"string\", \"enum\": [\"string\", \"number\", \"object\", \"boolean\", \"Date\"]},",
+							"      \"required\": { \"type\": \"boolean\" },",
+							"      \"deleted\": { \"type\": \"boolean\" },",
+							"  },",
+							"  \"required\": [\"_id\", \"store\", \"fieldName\", \"onModel\", \"type\", \"required\", \"deleted\"]",
+							"}",
+							"",
+							"pm.variables.set(\"schema\", schema);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var Ajv = require('ajv'), ajv = new Ajv({logger: console});",
+							"var _ = require('lodash')",
+							"",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var schema = pm.variables.get(\"schema\");",
+							"    pm.expect(ajv.validate(schema, pm.response.json()), JSON.stringify(ajv.errors)).to.be.true;",
+							"});",
+							"",
+							"pm.test('createCustomField is valid', function() {",
+							"    const data = pm.response.json();",
+							"",
+							"    const newCustomField = data;",
+							"",
+							"    pm.collectionVariables.set('customField_order_1', newCustomField._id);",
+							"    ",
+							"    // 초기 생성 데이터 초기값 일치 여부",
+							"    pm.expect(newCustomField.deleted).to.be.false;",
+							"});",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"store\": \"{{storeE}}\",\n    \"fieldName\": \"사용하는 기기의 종류\",\n    \"onModel\": \"Order\",\n    \"type\": \"string\",\n    \"required\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/customFields/",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"customFields",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "100_customField_새 사용자 정의 필드 생성_customer_3",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var schema = {",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"      \"_id\": { \"type\": \"string\" },",
+							"      \"store\": { \"type\": \"string\" },",
+							"      \"fieldName\": { \"type\": \"string\" },",
+							"      \"onModel\": { \"type\": \"string\", \"enum\": [\"Product\", \"Order\", \"Customer\"] },",
+							"      \"type\": { \"type\": \"string\", \"enum\": [\"string\", \"number\", \"object\", \"boolean\", \"Date\"]},",
+							"      \"required\": { \"type\": \"boolean\" },",
+							"      \"deleted\": { \"type\": \"boolean\" },",
+							"  },",
+							"  \"required\": [\"_id\", \"store\", \"fieldName\", \"onModel\", \"type\", \"required\", \"deleted\"]",
+							"}",
+							"",
+							"pm.variables.set(\"schema\", schema);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var Ajv = require('ajv'), ajv = new Ajv({logger: console});",
+							"var _ = require('lodash')",
+							"",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var schema = pm.variables.get(\"schema\");",
+							"    pm.expect(ajv.validate(schema, pm.response.json()), JSON.stringify(ajv.errors)).to.be.true;",
+							"});",
+							"",
+							"pm.test('createCustomField is valid', function() {",
+							"    const data = pm.response.json();",
+							"",
+							"    const newCustomField = data;",
+							"",
+							"    pm.collectionVariables.set('customField_customer_3', newCustomField._id);",
+							"    ",
+							"    // 초기 생성 데이터 초기값 일치 여부",
+							"    pm.expect(newCustomField.deleted).to.be.false;",
+							"});",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"store\": \"{{storeF}}\",\n    \"fieldName\": \"적립금\",\n    \"onModel\": \"Customer\",\n    \"type\": \"number\",\n    \"required\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/customFields/",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"customFields",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "101_customField_사용자 정의 필드 수정_product_1",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var schema = {",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"      \"_id\": { \"type\": \"string\" },",
+							"      \"store\": { \"type\": \"string\" },",
+							"      \"fieldName\": { \"type\": \"string\" },",
+							"      \"onModel\": { \"type\": \"string\", \"enum\": [\"Product\", \"Order\", \"Customer\"] },",
+							"      \"type\": { \"type\": \"string\", \"enum\": [\"string\", \"number\", \"object\", \"boolean\", \"Date\"]},",
+							"      \"required\": { \"type\": \"boolean\" },",
+							"      \"deleted\": { \"type\": \"boolean\" },",
+							"  },",
+							"  \"required\": [\"_id\", \"store\", \"fieldName\", \"onModel\", \"type\", \"required\", \"deleted\"]",
+							"}",
+							"",
+							"pm.variables.set(\"schema\", schema);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var Ajv = require('ajv'), ajv = new Ajv({logger: console});",
+							"var _ = require('lodash')",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var schema = pm.variables.get(\"schema\");",
+							"    pm.expect(ajv.validate(schema, pm.response.json()), JSON.stringify(ajv.errors)).to.be.true;",
+							"});",
+							"",
+							"pm.test('createCustomField is valid', function() {",
+							"    const data = pm.response.json();",
+							"",
+							"    const updatedCustomField = data;",
+							"",
+							"    pm.collectionVariables.set('customField_product_1', updatedCustomField._id);",
+							"    ",
+							"    // 초기 생성 데이터 초기값 일치 여부",
+							"    pm.expect(updatedCustomField.deleted).to.be.false;",
+							"});",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"fieldName\": \"도서 발행일\",\n    \"required\": false\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/customFields/{{customField_product_1}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"customFields",
+						"{{customField_product_1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "102_customField_사용자 정의 필드 수정_product_2",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var schema = {",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"      \"_id\": { \"type\": \"string\" },",
+							"      \"store\": { \"type\": \"string\" },",
+							"      \"fieldName\": { \"type\": \"string\" },",
+							"      \"onModel\": { \"type\": \"string\", \"enum\": [\"Product\", \"Order\", \"Customer\"] },",
+							"      \"type\": { \"type\": \"string\", \"enum\": [\"string\", \"number\", \"object\", \"boolean\", \"Date\"]},",
+							"      \"required\": { \"type\": \"boolean\" },",
+							"      \"deleted\": { \"type\": \"boolean\" },",
+							"  },",
+							"  \"required\": [\"_id\", \"store\", \"fieldName\", \"onModel\", \"type\", \"required\", \"deleted\"]",
+							"}",
+							"",
+							"pm.variables.set(\"schema\", schema);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var Ajv = require('ajv'), ajv = new Ajv({logger: console});",
+							"var _ = require('lodash')",
+							"",
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"fieldName\": \"유통기한\",\n    \"onModel\": \"Customer\",\n    \"required\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/customFields/{{customField_product_2}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"customFields",
+						"{{customField_product_2}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "103_customField_생성된 사용자 정의 필드 불러오기_customer_3",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var schema = {",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"      \"_id\": { \"type\": \"string\" },",
+							"      \"store\": { \"type\": \"string\" },",
+							"      \"fieldName\": { \"type\": \"string\" },",
+							"      \"onModel\": { \"type\": \"string\", \"enum\": [\"Product\", \"Order\", \"Customer\"] },",
+							"      \"type\": { \"type\": \"string\", \"enum\": [\"string\", \"number\", \"object\", \"boolean\", \"Date\"]},",
+							"      \"required\": { \"type\": \"boolean\" },",
+							"      \"deleted\": { \"type\": \"boolean\" },",
+							"  },",
+							"  \"required\": [\"_id\", \"store\", \"fieldName\", \"onModel\", \"type\", \"required\", \"deleted\"]",
+							"}",
+							"",
+							"pm.variables.set(\"schema\", schema);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var Ajv = require('ajv'), ajv = new Ajv({logger: console});",
+							"var _ = require('lodash')",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var schema = pm.variables.get(\"schema\");",
+							"    pm.expect(ajv.validate(schema, pm.response.json()), JSON.stringify(ajv.errors)).to.be.true;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/customFields/{{customField_customer_3}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"customFields",
+						"{{customField_customer_3}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "104_customField_사용자 정의 필드 삭제_customer_1",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var schema = {",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"      \"_id\": { \"type\": \"string\" },",
+							"      \"store\": { \"type\": \"string\" },",
+							"      \"fieldName\": { \"type\": \"string\" },",
+							"      \"onModel\": { \"type\": \"string\", \"enum\": [\"Product\", \"Order\", \"Customer\"] },",
+							"      \"type\": { \"type\": \"string\", \"enum\": [\"string\", \"number\", \"object\", \"boolean\", \"Date\"]},",
+							"      \"required\": { \"type\": \"boolean\" },",
+							"      \"deleted\": { \"type\": \"boolean\" },",
+							"  },",
+							"  \"required\": [\"_id\", \"store\", \"fieldName\", \"onModel\", \"type\", \"required\", \"deleted\"]",
+							"}",
+							"",
+							"pm.variables.set(\"schema\", schema);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var Ajv = require('ajv'), ajv = new Ajv({logger: console});",
+							"var _ = require('lodash')",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var schema = pm.variables.get(\"schema\");",
+							"    pm.expect(ajv.validate(schema, pm.response.json()), JSON.stringify(ajv.errors)).to.be.true;",
+							"});",
+							"",
+							"pm.test('CustomField is deleted', function() {",
+							"    const data = pm.response.json();",
+							"",
+							"    const newCustomField = data;",
+							"",
+							"    pm.collectionVariables.set('customField_customer_1', newCustomField._id);",
+							"    ",
+							"    // 초기 생성 데이터 초기값 일치 여부",
+							"    pm.expect(newCustomField.deleted).to.be.true;",
+							"});",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/customFields/{{customField_customer_1}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"customFields",
+						"{{customField_customer_1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "------------------------------------------------ Product",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "200_product_새 상품 생성",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var schema = {",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"      \"_id\": { \"type\": \"string\" },",
+							"      \"store\": { \"type\": \"string\" },",
+							"      \"name\": { \"type\": \"string\" },",
+							"      \"price\": { \"type\": \"number\" },",
+							"      \"categories\": {",
+							"          \"type\": \"array\",",
+							"          \"items\": [{\"type\" : \"string\"} ]",
+							"        },",
+							"      \"customValues\": {",
+							"          \"type\": \"array\",",
+							"          \"items\": [{",
+							"            \"type\": \"object\",",
+							"            \"properties\": {",
+							"                \"customField\": { \"type\": \"string\" },",
+							"                \"value\": { \"type\": [\"string\", \"number\", \"boolean\", \"object\"] }",
+							"            },",
+							"            \"required\": [\"customField\", \"value\"]",
+							"      }] },",
+							"      \"deleted\": { \"type\": \"boolean\" },",
+							"  },",
+							"  \"required\": [\"_id\", \"store\", \"name\", \"price\", \"categories\", \"deleted\"]",
+							"}",
+							"",
+							"pm.variables.set(\"schema\", schema);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var Ajv = require('ajv'), ajv = new Ajv({logger: console});",
+							"var _ = require('lodash')",
+							"",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var schema = pm.variables.get(\"schema\");",
+							"    pm.expect(ajv.validate(schema, pm.response.json()), JSON.stringify(ajv.errors)).to.be.true;",
+							"});",
+							"",
+							"pm.test('createProduct is valid', function() {",
+							"    const data = pm.response.json();",
+							"",
+							"    const newProduct = data;",
+							"",
+							"    pm.collectionVariables.set('product_1', newProduct._id);",
+							"    ",
+							"    // 초기 생성 데이터 초기값 일치 여부",
+							"    pm.expect(newProduct.deleted).to.be.false;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"store\": \"{{storeA}}\",\n    \"name\": \"ProductTest1\",\n    \"price\": 12000,\n    \"categories\": [\"Book\"],\n    \"customValues\": [{\n        \"customField\": \"{{customField_product_1}}\",\n        \"value\": \"2022-05-01T00:00:00.000Z\" \n    }]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/products/",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"products",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "200_product_새 상품 생성_2",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var schema = {",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"      \"_id\": { \"type\": \"string\" },",
+							"      \"store\": { \"type\": \"string\" },",
+							"      \"name\": { \"type\": \"string\" },",
+							"      \"price\": { \"type\": \"number\" },",
+							"      \"categories\": {",
+							"          \"type\": \"array\",",
+							"          \"items\": [{\"type\" : \"string\"} ]",
+							"        },",
+							"      \"customValues\": {",
+							"          \"type\": \"array\",",
+							"          \"items\": [{",
+							"            \"type\": \"object\",",
+							"            \"properties\": {",
+							"                \"customField\": { \"type\": \"string\" },",
+							"                \"value\": { \"type\": [\"string\", \"number\", \"boolean\", \"object\"] }",
+							"            },",
+							"            \"required\": [\"customField\", \"value\"]",
+							"      }] },",
+							"      \"deleted\": { \"type\": \"boolean\" },",
+							"  },",
+							"  \"required\": [\"_id\", \"store\", \"name\", \"price\", \"categories\", \"deleted\"]",
+							"}",
+							"",
+							"pm.variables.set(\"schema\", schema);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var Ajv = require('ajv'), ajv = new Ajv({logger: console});",
+							"var _ = require('lodash')",
+							"",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var schema = pm.variables.get(\"schema\");",
+							"    pm.expect(ajv.validate(schema, pm.response.json()), JSON.stringify(ajv.errors)).to.be.true;",
+							"});",
+							"",
+							"pm.test('createProduct is valid', function() {",
+							"    const data = pm.response.json();",
+							"",
+							"    const newProduct = data;",
+							"",
+							"    pm.collectionVariables.set('product_2', newProduct._id);",
+							"    ",
+							"    // 초기 생성 데이터 초기값 일치 여부",
+							"    pm.expect(newProduct.deleted).to.be.false;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"store\": \"{{storeB}}\",\n    \"name\": \"ProductTest2\",\n    \"price\": 24000,\n    \"categories\": [\"Food\"],\n    \"customValues\": [{\n        \"customField\": \"{{customField_product_2}}\",\n        \"value\": \"2022-05-03T00:00:00.000Z\" \n    }]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/products/",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"products",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "200_product_새 상품 생성_3",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var schema = {",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"      \"_id\": { \"type\": \"string\" },",
+							"      \"store\": { \"type\": \"string\" },",
+							"      \"name\": { \"type\": \"string\" },",
+							"      \"price\": { \"type\": \"number\" },",
+							"      \"categories\": {",
+							"          \"type\": \"array\",",
+							"          \"items\": [{\"type\" : \"string\"} ]",
+							"        },",
+							"      \"customValues\": {",
+							"          \"type\": \"array\",",
+							"          \"items\": [{",
+							"            \"type\": \"object\",",
+							"            \"properties\": {",
+							"                \"customField\": { \"type\": \"string\" },",
+							"                \"value\": { \"type\": [\"string\", \"number\", \"boolean\", \"object\"] }",
+							"            },",
+							"            \"required\": [\"customField\", \"value\"]",
+							"      }] },",
+							"      \"deleted\": { \"type\": \"boolean\" },",
+							"  },",
+							"  \"required\": [\"_id\", \"store\", \"name\", \"price\", \"categories\", \"deleted\"]",
+							"}",
+							"",
+							"pm.variables.set(\"schema\", schema);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var Ajv = require('ajv'), ajv = new Ajv({logger: console});",
+							"var _ = require('lodash')",
+							"",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var schema = pm.variables.get(\"schema\");",
+							"    pm.expect(ajv.validate(schema, pm.response.json()), JSON.stringify(ajv.errors)).to.be.true;",
+							"});",
+							"",
+							"pm.test('createProduct is valid', function() {",
+							"    const data = pm.response.json();",
+							"",
+							"    const newProduct = data;",
+							"",
+							"    pm.collectionVariables.set('product_3', newProduct._id);",
+							"    ",
+							"    // 초기 생성 데이터 초기값 일치 여부",
+							"    pm.expect(newProduct.deleted).to.be.false;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"store\": \"{{storeE}}\",\n    \"name\": \"ProductTest3\",\n    \"price\": 24000,\n    \"categories\": [\"Food\"]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/products/",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"products",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "201_product_상품 정보 업데이트_1",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var schema = {",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"      \"_id\": { \"type\": \"string\" },",
+							"      \"store\": { \"type\": \"string\" },",
+							"      \"name\": { \"type\": \"string\" },",
+							"      \"price\": { \"type\": \"number\" },",
+							"      \"categories\": {",
+							"          \"type\": \"array\",",
+							"          \"items\": [{\"type\" : \"string\"} ]",
+							"        },",
+							"      \"customValues\": {",
+							"          \"type\": \"array\",",
+							"          \"items\": [{",
+							"            \"type\": \"object\",",
+							"            \"properties\": {",
+							"                \"customField\": { \"type\": \"string\" },",
+							"                \"value\": { \"type\": [\"string\", \"number\", \"boolean\", \"object\"] }",
+							"            },",
+							"            \"required\": [\"customField\", \"value\"]",
+							"      }] },",
+							"      \"deleted\": { \"type\": \"boolean\" },",
+							"  },",
+							"  \"required\": [\"_id\", \"store\", \"name\", \"price\", \"categories\", \"deleted\"]",
+							"}",
+							"",
+							"pm.variables.set(\"schema\", schema);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var Ajv = require('ajv'), ajv = new Ajv({logger: console});",
+							"var _ = require('lodash')",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var schema = pm.variables.get(\"schema\");",
+							"    pm.expect(ajv.validate(schema, pm.response.json()), JSON.stringify(ajv.errors)).to.be.true;",
+							"});",
+							"",
+							"pm.test('updateProduct is valid', function() {",
+							"    const data = pm.response.json();",
+							"",
+							"    const updatedProduct = data;",
+							"",
+							"    pm.collectionVariables.set('product_1', updatedProduct._id);",
+							"    ",
+							"    // 초기 생성 데이터 초기값 일치 여부",
+							"    pm.expect(updatedProduct.deleted).to.be.false;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"ProductTest1_modified\",\n    \"price\": 12300,\n    \"customValues\": [{\n        \"customField\": \"{{customField_product_1}}\",\n        \"value\": \"2022-05-04T00:00:00.000Z\" \n    }]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/products/{{product_1}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"products",
+						"{{product_1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "201_product_상품 정보 업데이트_2",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var schema = {",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"      \"_id\": { \"type\": \"string\" },",
+							"      \"store\": { \"type\": \"string\" },",
+							"      \"name\": { \"type\": \"string\" },",
+							"      \"price\": { \"type\": \"number\" },",
+							"      \"categories\": {",
+							"          \"type\": \"array\",",
+							"          \"items\": [{\"type\" : \"string\"} ]",
+							"        },",
+							"      \"customValues\": {",
+							"          \"type\": \"array\",",
+							"          \"items\": [{",
+							"            \"type\": \"object\",",
+							"            \"properties\": {",
+							"                \"customField\": { \"type\": \"string\" },",
+							"                \"value\": { \"type\": [\"string\", \"number\", \"boolean\", \"object\"] }",
+							"            },",
+							"            \"required\": [\"customField\", \"value\"]",
+							"      }] },",
+							"      \"deleted\": { \"type\": \"boolean\" },",
+							"  },",
+							"  \"required\": [\"_id\", \"store\", \"name\", \"price\", \"categories\", \"deleted\"]",
+							"}",
+							"",
+							"pm.variables.set(\"schema\", schema);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var Ajv = require('ajv'), ajv = new Ajv({logger: console});",
+							"var _ = require('lodash')",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var schema = pm.variables.get(\"schema\");",
+							"    pm.expect(ajv.validate(schema, pm.response.json()), JSON.stringify(ajv.errors)).to.be.true;",
+							"});",
+							"",
+							"pm.test('updateProduct is valid', function() {",
+							"    const data = pm.response.json();",
+							"",
+							"    const updatedProduct = data;",
+							"",
+							"    pm.collectionVariables.set('product_1', updatedProduct._id);",
+							"    ",
+							"    // 초기 생성 데이터 초기값 일치 여부",
+							"    pm.expect(updatedProduct.deleted).to.be.false;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"ProductTest2_modified\",\n    \"price\": 24400,\n    \"categories\": [\"Book\"],\n    \"customValues\": [{\n        \"customField\": \"{{customField_product_2}}\",\n        \"value\": \"2022-05-04T00:00:00.000Z\" \n    }]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/products/{{product_1}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"products",
+						"{{product_1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "------------------------------------------------ Customer",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "300_customer_새 고객 생성",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var schema = {",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"      \"_id\": { \"type\": \"string\" },",
+							"      \"store\": { \"type\": \"string\" },",
+							"      \"name\": { \"type\": \"string\" },",
+							"      \"email\": { \"type\": \"string\", \"format\": \"email\" },",
+							"      \"password\": { \"type\": \"string\" },",
+							"      \"customValues\": {",
+							"          \"type\": \"array\",",
+							"          \"items\": [{",
+							"            \"type\": \"object\",",
+							"            \"properties\": {",
+							"                \"customField\": { \"type\": \"string\" },",
+							"                \"value\": { \"type\": [\"string\", \"number\", \"boolean\", \"object\"] }",
+							"            },",
+							"            \"required\": [\"customField\", \"value\"]",
+							"      }] },",
+							"      \"deleted\": { \"type\": \"boolean\" },",
+							"  },",
+							"  \"required\": [\"_id\", \"store\", \"name\", \"email\", \"password\" ,\"deleted\"]",
+							"}",
+							"",
+							"pm.variables.set(\"schema\", schema);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var Ajv = require('ajv'), ajv = new Ajv({logger: console});",
+							"var _ = require('lodash')",
+							"",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var schema = pm.variables.get(\"schema\");",
+							"    pm.expect(ajv.validate(schema, pm.response.json()), JSON.stringify(ajv.errors)).to.be.true;",
+							"});",
+							"",
+							"pm.test('createCustomer is valid', function() {",
+							"    const data = pm.response.json();",
+							"",
+							"    const newCustomer = data;",
+							"",
+							"    pm.collectionVariables.set('customer1', newCustomer._id);",
+							"    ",
+							"    // 초기 생성 데이터 초기값 일치 여부",
+							"    pm.expect(newCustomer.deleted).to.be.false;",
+							"});",
+							"",
+							"pm.test('duplicated storeName returns 400', function() {",
+							"    pm.sendRequest({",
+							"        url: 'localhost:3000/customers/',",
+							"        method: 'POST',",
+							"        header: {",
+							"            'Content-Type': 'application/json'",
+							"        },",
+							"        body: {",
+							"            mode: 'raw',",
+							"            raw: JSON.stringify({ \"store\": pm.collectionVariables.get('storeC'),",
+							"                \"name\": \"rudy\",",
+							"                \"email\": \"rycando@naver.com\",",
+							"                \"password\": \"1234\",",
+							"                \"customValues\": [{",
+							"                    \"customField\": pm.collectionVariables.get('customField_customer_1'),",
+							"                    \"value\": \"010-3565-2224\"",
+							"    }] })",
+							"        }})",
+							"    }, (err, resp) => {",
+							"        pm.expect(resp.code).to.equal(400)",
+							"    })",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"store\": \"{{storeC}}\",\n    \"name\": \"rudy\",\n    \"email\": \"rycando@naver.com\",\n    \"password\": \"1234\",\n    \"customValues\": [{\n        \"customField\": \"{{customField_customer_1}}\",\n        \"value\": \"010-3565-2224\"\n    }]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/customers/",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"customers",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "300_customer_새 고객 생성_2",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var schema = {",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"      \"_id\": { \"type\": \"string\" },",
+							"      \"store\": { \"type\": \"string\" },",
+							"      \"name\": { \"type\": \"string\" },",
+							"      \"email\": { \"type\": \"string\", \"format\": \"email\" },",
+							"      \"password\": { \"type\": \"string\" },",
+							"      \"customValues\": {",
+							"          \"type\": \"array\",",
+							"          \"items\": [{",
+							"            \"type\": \"object\",",
+							"            \"properties\": {",
+							"                \"customField\": { \"type\": \"string\" },",
+							"                \"value\": { \"type\": [\"string\", \"number\", \"boolean\", \"object\"] }",
+							"            },",
+							"            \"required\": [\"customField\", \"value\"]",
+							"      }] },",
+							"      \"deleted\": { \"type\": \"boolean\" },",
+							"  },",
+							"  \"required\": [\"_id\", \"store\", \"name\", \"email\", \"password\" ,\"deleted\"]",
+							"}",
+							"",
+							"pm.variables.set(\"schema\", schema);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var Ajv = require('ajv'), ajv = new Ajv({logger: console});",
+							"var _ = require('lodash')",
+							"",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var schema = pm.variables.get(\"schema\");",
+							"    pm.expect(ajv.validate(schema, pm.response.json()), JSON.stringify(ajv.errors)).to.be.true;",
+							"});",
+							"",
+							"pm.test('createCustomer is valid', function() {",
+							"    const data = pm.response.json();",
+							"",
+							"    const newCustomer = data;",
+							"",
+							"    pm.collectionVariables.set('customer2', newCustomer._id);",
+							"    ",
+							"    // 초기 생성 데이터 초기값 일치 여부",
+							"    pm.expect(newCustomer.deleted).to.be.false;",
+							"});",
+							"",
+							"pm.test('duplicated storeName returns 400', function() {",
+							"    pm.sendRequest({",
+							"        url: 'localhost:3000/customers/',",
+							"        method: 'POST',",
+							"        header: {",
+							"            'Content-Type': 'application/json'",
+							"        },",
+							"        body: {",
+							"            mode: 'raw',",
+							"            raw: JSON.stringify({ \"store\": pm.collectionVariables.get('storeD'),",
+							"                \"name\": \"rudy\",",
+							"                \"email\": \"rycando@naver.com\",",
+							"                \"password\": \"1234\",",
+							"                \"customValues\": [{",
+							"                    \"customField\": pm.collectionVariables.get('customField_customer_2'),",
+							"                    \"value\": \"male\"",
+							"    }] })",
+							"        }})",
+							"    }, (err, resp) => {",
+							"        pm.expect(resp.code).to.equal(400)",
+							"    })",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"store\": \"{{storeD}}\",\n    \"name\": \"rudy\",\n    \"email\": \"rycando@naver.com\",\n    \"password\": \"1234\",\n    \"customValues\": [{\n        \"customField\": \"{{customField_customer_2}}\",\n        \"value\": \"male\"\n    }]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/customers/",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"customers",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "300_customer_새 고객 생성_3",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var schema = {",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"      \"_id\": { \"type\": \"string\" },",
+							"      \"store\": { \"type\": \"string\" },",
+							"      \"name\": { \"type\": \"string\" },",
+							"      \"email\": { \"type\": \"string\", \"format\": \"email\" },",
+							"      \"password\": { \"type\": \"string\" },",
+							"      \"customValues\": {",
+							"          \"type\": \"array\",",
+							"          \"items\": [{",
+							"            \"type\": \"object\",",
+							"            \"properties\": {",
+							"                \"customField\": { \"type\": \"string\" },",
+							"                \"value\": { \"type\": [\"string\", \"number\", \"boolean\", \"object\"] }",
+							"            },",
+							"            \"required\": [\"customField\", \"value\"]",
+							"      }] },",
+							"      \"deleted\": { \"type\": \"boolean\" },",
+							"  },",
+							"  \"required\": [\"_id\", \"store\", \"name\", \"email\", \"password\" ,\"deleted\"]",
+							"}",
+							"",
+							"pm.variables.set(\"schema\", schema);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var Ajv = require('ajv'), ajv = new Ajv({logger: console});",
+							"var _ = require('lodash')",
+							"",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var schema = pm.variables.get(\"schema\");",
+							"    pm.expect(ajv.validate(schema, pm.response.json()), JSON.stringify(ajv.errors)).to.be.true;",
+							"});",
+							"",
+							"pm.test('createCustomer is valid', function() {",
+							"    const data = pm.response.json();",
+							"",
+							"    const newCustomer = data;",
+							"",
+							"    pm.collectionVariables.set('customer3', newCustomer._id);",
+							"    ",
+							"    // 초기 생성 데이터 초기값 일치 여부",
+							"    pm.expect(newCustomer.deleted).to.be.false;",
+							"});",
+							"",
+							"pm.test('duplicated storeName returns 400', function() {",
+							"    pm.sendRequest({",
+							"        url: 'localhost:3000/customers/',",
+							"        method: 'POST',",
+							"        header: {",
+							"            'Content-Type': 'application/json'",
+							"        },",
+							"        body: {",
+							"            mode: 'raw',",
+							"            raw: JSON.stringify({ \"store\": pm.collectionVariables.get('storeF'),",
+							"                \"name\": \"rudy\",",
+							"                \"email\": \"rycando@naver.com\",",
+							"                \"password\": \"1234\",",
+							"                \"customValues\": [{",
+							"                    \"customField\": pm.collectionVariables.get('customField_customer_3'),",
+							"                    \"value\": 0",
+							"    }] })",
+							"        }})",
+							"    }, (err, resp) => {",
+							"        pm.expect(resp.code).to.equal(400)",
+							"    })",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"store\": \"{{storeF}}\",\n    \"name\": \"rudy\",\n    \"email\": \"rycando@naver.com\",\n    \"password\": \"1234\",\n    \"customValues\": [{\n        \"customField\": \"{{customField_customer_3}}\",\n        \"value\": 0\n    }]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/customers/",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"customers",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "300_customer_새 고객 생성_4",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var schema = {",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"      \"_id\": { \"type\": \"string\" },",
+							"      \"store\": { \"type\": \"string\" },",
+							"      \"name\": { \"type\": \"string\" },",
+							"      \"email\": { \"type\": \"string\", \"format\": \"email\" },",
+							"      \"password\": { \"type\": \"string\" },",
+							"      \"customValues\": {",
+							"          \"type\": \"array\",",
+							"          \"items\": [{",
+							"            \"type\": \"object\",",
+							"            \"properties\": {",
+							"                \"customField\": { \"type\": \"string\" },",
+							"                \"value\": { \"type\": [\"string\", \"number\", \"boolean\", \"object\"] }",
+							"            },",
+							"            \"required\": [\"customField\", \"value\"]",
+							"      }] },",
+							"      \"deleted\": { \"type\": \"boolean\" },",
+							"  },",
+							"  \"required\": [\"_id\", \"store\", \"name\", \"email\", \"password\" ,\"deleted\"]",
+							"}",
+							"",
+							"pm.variables.set(\"schema\", schema);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var Ajv = require('ajv'), ajv = new Ajv({logger: console});",
+							"var _ = require('lodash')",
+							"",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var schema = pm.variables.get(\"schema\");",
+							"    pm.expect(ajv.validate(schema, pm.response.json()), JSON.stringify(ajv.errors)).to.be.true;",
+							"});",
+							"",
+							"pm.test('createCustomer is valid', function() {",
+							"    const data = pm.response.json();",
+							"",
+							"    const newCustomer = data;",
+							"",
+							"    pm.collectionVariables.set('customer4', newCustomer._id);",
+							"    ",
+							"    // 초기 생성 데이터 초기값 일치 여부",
+							"    pm.expect(newCustomer.deleted).to.be.false;",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"store\": \"{{storeE}}\",\n    \"name\": \"rudy\",\n    \"email\": \"rycando@naver.com\",\n    \"password\": \"1234\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/customers/",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"customers",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "301_customer_고객 정보 업데이트_1",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var schema = {",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"      \"_id\": { \"type\": \"string\" },",
+							"      \"store\": { \"type\": \"string\" },",
+							"      \"name\": { \"type\": \"string\" },",
+							"      \"email\": { \"type\": \"string\", \"format\": \"email\" },",
+							"      \"password\": { \"type\": \"string\" },",
+							"      \"customValues\": {",
+							"          \"type\": \"array\",",
+							"          \"items\": [{",
+							"            \"type\": \"object\",",
+							"            \"properties\": {",
+							"                \"customField\": { \"type\": \"string\" },",
+							"                \"value\": { \"type\": [\"string\", \"number\", \"boolean\", \"object\"] }",
+							"            },",
+							"            \"required\": [\"customField\", \"value\"]",
+							"      }] },",
+							"      \"deleted\": { \"type\": \"boolean\" },",
+							"  },",
+							"  \"required\": [\"_id\", \"store\", \"name\", \"email\", \"password\" ,\"deleted\"]",
+							"}",
+							"",
+							"pm.variables.set(\"schema\", schema);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var Ajv = require('ajv'), ajv = new Ajv({logger: console});",
+							"var _ = require('lodash')",
+							"",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var schema = pm.variables.get(\"schema\");",
+							"    pm.expect(ajv.validate(schema, pm.response.json()), JSON.stringify(ajv.errors)).to.be.true;",
+							"});",
+							"",
+							"pm.test('createCustomer is valid', function() {",
+							"    const data = pm.response.json();",
+							"",
+							"    const newCustomer = data;",
+							"",
+							"    pm.collectionVariables.set('customer', newCustomer._id);",
+							"    ",
+							"    // 초기 생성 데이터 초기값 일치 여부",
+							"    pm.expect(newCustomer.deleted).to.be.false;",
+							"});",
+							"",
+							"pm.test('duplicated storeName returns 400', function() {",
+							"    pm.sendRequest({",
+							"        url: 'localhost:3000/customers/',",
+							"        method: 'POST',",
+							"        header: {",
+							"            'Content-Type': 'application/json'",
+							"        },",
+							"        body: {",
+							"            mode: 'raw',",
+							"            raw: JSON.stringify({ \"store\": pm.collectionVariables.get('storeC'),",
+							"                \"name\": \"rudy\",",
+							"                \"email\": \"rycando@naver.com\",",
+							"                \"password\": \"1234\",",
+							"                \"customValues\": [{",
+							"                    \"customField\": pm.collectionVariables.get('customField_customer_1'),",
+							"                    \"value\": \"010-3565-2224\"",
+							"    }] })",
+							"        }})",
+							"    }, (err, resp) => {",
+							"        pm.expect(resp.code).to.equal(400)",
+							"    })",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"notRudy\",\n    \"customValues\": [{\n        \"customField\": \"{{customField_customer_1}}\",\n        \"value\": \"010-3565-1234\"\n    }]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/customers/{{customer1}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"customers",
+						"{{customer1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "301_customer_고객 정보 업데이트_2",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var schema = {",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"      \"_id\": { \"type\": \"string\" },",
+							"      \"store\": { \"type\": \"string\" },",
+							"      \"name\": { \"type\": \"string\" },",
+							"      \"email\": { \"type\": \"string\", \"format\": \"email\" },",
+							"      \"password\": { \"type\": \"string\" },",
+							"      \"customValues\": {",
+							"          \"type\": \"array\",",
+							"          \"items\": [{",
+							"            \"type\": \"object\",",
+							"            \"properties\": {",
+							"                \"customField\": { \"type\": \"string\" },",
+							"                \"value\": { \"type\": [\"string\", \"number\", \"boolean\", \"object\"] }",
+							"            },",
+							"            \"required\": [\"customField\", \"value\"]",
+							"      }] },",
+							"      \"deleted\": { \"type\": \"boolean\" },",
+							"  },",
+							"  \"required\": [\"_id\", \"store\", \"name\", \"email\", \"password\" ,\"deleted\"]",
+							"}",
+							"",
+							"pm.variables.set(\"schema\", schema);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var Ajv = require('ajv'), ajv = new Ajv({logger: console});",
+							"var _ = require('lodash')",
+							"",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var schema = pm.variables.get(\"schema\");",
+							"    pm.expect(ajv.validate(schema, pm.response.json()), JSON.stringify(ajv.errors)).to.be.true;",
+							"});",
+							"",
+							"pm.test('createCustomer is valid', function() {",
+							"    const data = pm.response.json();",
+							"",
+							"    const newCustomer = data;",
+							"",
+							"    pm.collectionVariables.set('customer2', newCustomer._id);",
+							"    ",
+							"    // 초기 생성 데이터 초기값 일치 여부",
+							"    pm.expect(newCustomer.deleted).to.be.false;",
+							"});",
+							"",
+							"pm.test('duplicated storeName returns 400', function() {",
+							"    pm.sendRequest({",
+							"        url: 'localhost:3000/customers/',",
+							"        method: 'PUT',",
+							"        header: {",
+							"            'Content-Type': 'application/json'",
+							"        },",
+							"        body: {",
+							"            mode: 'raw',",
+							"            raw: JSON.stringify({ \"store\": pm.collectionVariables.get('storeC'),",
+							"                \"name\": \"rudy\",",
+							"                \"email\": \"rycando@naver.com\",",
+							"                \"password\": \"1234\",",
+							"                \"customValues\": [{",
+							"                    \"customField\": pm.collectionVariables.get('customField_customer_2'),",
+							"                    \"value\": \"male\"",
+							"    }] })",
+							"        }})",
+							"    }, (err, resp) => {",
+							"        pm.expect(resp.code).to.equal(400)",
+							"    })",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"customValues\": [{\n        \"customField\": \"{{customField_customer_2}}\",\n        \"value\": \"female\"\n    }]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/customers/{{customer2}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"customers",
+						"{{customer2}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "------------------------------------------------ Order",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "400_order_새 주문 생성",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var schema = {",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"      \"_id\": { \"type\": \"string\" },",
+							"      \"store\": { \"type\": \"string\" },",
+							"      \"name\": { \"type\": \"string\" },",
+							"      \"email\": { \"type\": \"string\", \"format\": \"email\" },",
+							"      \"password\": { \"type\": \"string\" },",
+							"      \"customValues\": {",
+							"          \"type\": \"array\",",
+							"          \"items\": [{",
+							"            \"type\": \"object\",",
+							"            \"properties\": {",
+							"                \"customField\": { \"type\": \"string\" },",
+							"                \"value\": { \"type\": [\"string\", \"number\", \"boolean\", \"object\"] }",
+							"            },",
+							"            \"required\": [\"customField\", \"value\"]",
+							"      }] },",
+							"      \"deleted\": { \"type\": \"boolean\" },",
+							"  },",
+							"  \"required\": [\"_id\", \"store\", \"name\", \"email\", \"password\" ,\"deleted\"]",
+							"}",
+							"",
+							"pm.variables.set(\"schema\", schema);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var Ajv = require('ajv'), ajv = new Ajv({logger: console});",
+							"var _ = require('lodash')",
+							"",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var schema = pm.variables.get(\"schema\");",
+							"    pm.expect(ajv.validate(schema, pm.response.json()), JSON.stringify(ajv.errors)).to.be.true;",
+							"});",
+							"",
+							"pm.test('createCustomer is valid', function() {",
+							"    const data = pm.response.json();",
+							"",
+							"    const newOrder = data;",
+							"",
+							"    pm.collectionVariables.set('order_1', newOrder._id);",
+							"    ",
+							"    // 초기 생성 데이터 초기값 일치 여부",
+							"    pm.expect(newOrder.deleted).to.be.false;",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"store\": \"{{storeE}}\",\n    \"customer\": \"{{customer4}}\",\n    \"products\": [\"{{product_3}}\"],\n    \"customValues\": [{\n        \"customField\": \"{{customField_order_1}}\",\n        \"value\": \"아이폰11\"\n    }]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/orders/",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"orders",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "401_order_주문 상태 업데이트_success",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var schema = {",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"      \"_id\": { \"type\": \"string\" },",
+							"      \"store\": { \"type\": \"string\" },",
+							"      \"name\": { \"type\": \"string\" },",
+							"      \"email\": { \"type\": \"string\", \"format\": \"email\" },",
+							"      \"password\": { \"type\": \"string\" },",
+							"      \"customValues\": {",
+							"          \"type\": \"array\",",
+							"          \"items\": [{",
+							"            \"type\": \"object\",",
+							"            \"properties\": {",
+							"                \"customField\": { \"type\": \"string\" },",
+							"                \"value\": { \"type\": [\"string\", \"number\", \"boolean\", \"object\"] }",
+							"            },",
+							"            \"required\": [\"customField\", \"value\"]",
+							"      }] },",
+							"      \"deleted\": { \"type\": \"boolean\" },",
+							"  },",
+							"  \"required\": [\"_id\", \"store\", \"name\", \"email\", \"password\" ,\"deleted\"]",
+							"}",
+							"",
+							"pm.variables.set(\"schema\", schema);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var Ajv = require('ajv'), ajv = new Ajv({logger: console});",
+							"var _ = require('lodash')",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Schema is valid', function() {",
+							"    var schema = pm.variables.get(\"schema\");",
+							"    pm.expect(ajv.validate(schema, pm.response.json()), JSON.stringify(ajv.errors)).to.be.true;",
+							"});",
+							"",
+							"pm.test('updateCustomer is valid', function() {",
+							"    const data = pm.response.json();",
+							"",
+							"    const newOrder = data;",
+							"",
+							"    pm.collectionVariables.set('order_1', newOrder._id);",
+							"    ",
+							"    // 초기 생성 데이터 초기값 일치 여부",
+							"    pm.expect(newOrder.deleted).to.be.false;",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/orders/{{order_1}}/confirm",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"orders",
+						"{{order_1}}",
+						"confirm"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "402_order_주문 상태 업데이트_failed",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var schema = {",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"      \"_id\": { \"type\": \"string\" },",
+							"      \"store\": { \"type\": \"string\" },",
+							"      \"name\": { \"type\": \"string\" },",
+							"      \"email\": { \"type\": \"string\", \"format\": \"email\" },",
+							"      \"password\": { \"type\": \"string\" },",
+							"      \"customValues\": {",
+							"          \"type\": \"array\",",
+							"          \"items\": [{",
+							"            \"type\": \"object\",",
+							"            \"properties\": {",
+							"                \"customField\": { \"type\": \"string\" },",
+							"                \"value\": { \"type\": [\"string\", \"number\", \"boolean\", \"object\"] }",
+							"            },",
+							"            \"required\": [\"customField\", \"value\"]",
+							"      }] },",
+							"      \"deleted\": { \"type\": \"boolean\" },",
+							"  },",
+							"  \"required\": [\"_id\", \"store\", \"name\", \"email\", \"password\" ,\"deleted\"]",
+							"}",
+							"",
+							"pm.variables.set(\"schema\", schema);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var Ajv = require('ajv'), ajv = new Ajv({logger: console});",
+							"var _ = require('lodash')",
+							"",
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"store\": \"{{storeE}}\",\n    \"customer\": \"{{customer4}}\",\n    \"products\": [\"{{product_3}}\"],\n    \"customValues\": [{\n        \"customField\": \"{{customField_order_1}}\",\n        \"value\": \"아이폰11\"\n    }]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/orders/{{order_1}}/send",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"orders",
+						"{{order_1}}",
+						"send"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "store",
+			"value": ""
+		},
+		{
+			"key": "customField_product_1",
+			"value": ""
+		},
+		{
+			"key": "storeA",
+			"value": ""
+		},
+		{
+			"key": "storeB",
+			"value": ""
+		},
+		{
+			"key": "storeC",
+			"value": ""
+		},
+		{
+			"key": "storeD",
+			"value": ""
+		},
+		{
+			"key": "storeE",
+			"value": ""
+		},
+		{
+			"key": "storeF",
+			"value": ""
+		},
+		{
+			"key": "customField_product_2",
+			"value": ""
+		},
+		{
+			"key": "customField_customer_1",
+			"value": ""
+		},
+		{
+			"key": "customField_customer_2",
+			"value": ""
+		},
+		{
+			"key": "customField_order_1",
+			"value": ""
+		},
+		{
+			"key": "customField_customer_3",
+			"value": ""
+		},
+		{
+			"key": "customer",
+			"value": ""
+		},
+		{
+			"key": "customer1",
+			"value": ""
+		},
+		{
+			"key": "customer2",
+			"value": ""
+		},
+		{
+			"key": "customer3",
+			"value": ""
+		},
+		{
+			"key": "prodcut_1",
+			"value": ""
+		},
+		{
+			"key": "prodcut_2",
+			"value": ""
+		},
+		{
+			"key": "product_1",
+			"value": ""
+		},
+		{
+			"key": "product_2",
+			"value": ""
+		},
+		{
+			"key": "product_3",
+			"value": ""
+		},
+		{
+			"key": "customer4",
+			"value": ""
+		},
+		{
+			"key": "order_1",
+			"value": ""
+		}
+	]
+}

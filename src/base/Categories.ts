@@ -1,11 +1,19 @@
+/**
+ * 상품의 카테고리
+ */
 export enum Categories {
-	Book = "Book",
+  /** 책 */
+  Book = 'Book',
 
-	Food = "Food",
+  /** 음식 */
+  Food = 'Food',
 
-	Acc = "Acc",
+  /** 액세서리 */
+  Acc = 'Acc',
 
-	Clothes = "Clothes",
+  /** 옷 */
+  Clothes = 'Clothes',
 
-	Etc = "Etc",
+  /** 기타 */
+  Etc = 'Etc',
 }

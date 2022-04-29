@@ -1,7 +1,13 @@
+/**
+ * 사용자 정의 필드를 생성할 수 있는 모델
+ */
 export enum Models {
-	PRODUCT = "PRODUCT",
+  /** 상품 */
+  Product = 'Product',
 
-	CUSTOMER = "CUSTOMER",
+  /** 고객 */
+  Customer = 'Customer',
 
-	ORDER = "ORDER",
+  /** 주문 */
+  Order = 'Order',
 }

@@ -1,73 +1,153 @@
-import { CustomerRepository } from "./customerRepository";
-import { injectable } from "tsyringe";
-import { StoreService } from "~/Store";
-import { CustomFieldService } from "~/CustomField";
-import { DocumentCustomValues } from "~/base/CustomValues";
-import * as R from "ramda";
-import { Types } from "~/base/Types";
-import _ from "lodash";
-import { createCustomerDTO } from "./dto";
+import { ObjectID } from 'bson'
+import _ from 'lodash'
+import { Schema } from 'mongoose'
+import * as R from 'ramda'
+import { delay, inject, injectable } from 'tsyringe'
+import { CustomValuesDTO, DocumentCustomValues, Models, Types } from '~/base'
+import {
+  createCustomerDTO,
+  CustomerDTO,
+  CustomerRepository,
+  DocumentCustomer,
+} from '~/Customer'
+import { CustomFieldDTO, CustomFieldService } from '~/CustomField'
+import { StoreService } from '~/Store'
 
 @injectable()
 export class CustomerService {
-	constructor(
-		private readonly customerRepository: CustomerRepository,
-		private readonly storeService: StoreService,
-		private readonly customFieldService: CustomFieldService
-	) {}
+  constructor(
+    @inject(delay(() => CustomerRepository))
+    private readonly customerRepository: CustomerRepository,
+    private readonly storeService: StoreService,
+    private readonly customFieldService: CustomFieldService
+  ) {}
 
-	getAllCustomers = async () => {
-		return await this.customerRepository.find();
-	};
-	async getCustomerById(id: string) {
-		return await this.customerRepository.findOne(id);
-	}
-	async createNewCustomer(payload: createCustomerDTO) {
-		const store = await this.storeService.getStoreById(payload.store);
+  getAllCustomers = async () => {
+    return await this.customerRepository.find()
+  }
+  async getCustomerById(id: string) {
+    return await this.customerRepository.findOne(id)
+  }
+  async getCustomersByIds(ids: string[] | Schema.Types.ObjectId[]) {
+    return await this.customerRepository.find({
+      _id: { $in: ids },
+    })
+  }
+  async getCustomerDTOs(customers: DocumentCustomer[]) {
+    try {
+      return await Promise.all(
+        R.map(async (customer: DocumentCustomer) => {
+          const customFieldIds = R.map(
+            (customValue: DocumentCustomValues) => customValue.customField,
+            customer.customValues
+          )
+          let customValuesDTOs = R.map((customValue: DocumentCustomValues) => {
+            return new CustomValuesDTO(customValue)
+          }, customer.customValues)
+          const customFields =
+            await this.customFieldService.getCustomFieldsByIds(
+              Models.Customer,
+              customFieldIds
+            )
 
-		if (!store) {
-			throw new Error("correspond store not found");
-		}
+          const extendedCustomValuesDTO = _.compact(
+            R.map((customValuesDTO: CustomValuesDTO) => {
+              const customField = _.find(customFields, (x) =>
+                (customValuesDTO.customField as ObjectID).equals(x._id)
+              )
+              if (!customField) {
+                return null
+              }
+              customValuesDTO.customField = new CustomFieldDTO(customField)
+              return customValuesDTO
+            }, customValuesDTOs)
+          )
 
-		const customFieldIds = _.uniq(
-			R.map(
-				(customValue: DocumentCustomValues) => customValue.customField,
-				payload.customValues
-			)
-		);
-		const customFields = await this.customFieldService.getCustomFieldsByIds(
-			customFieldIds
-		);
+          return new CustomerDTO(customer, extendedCustomValuesDTO)
+        }, customers)
+      )
+    } catch (e) {
+      console.log(e)
+    }
+  }
+  async getCustomersByStoreId(storeId: string) {
+    const customers = await this.customerRepository.find({
+      store: storeId,
+    })
 
-		if (customFields.length !== customFieldIds.length) {
-			throw new Error("correspond customField not found");
-		}
+    return await this.getCustomerDTOs(customers)
+  }
+  async createNewCustomer(payload: createCustomerDTO) {
+    const store = await this.storeService.getStoreById(payload.store)
 
-		R.map(async (customValue: DocumentCustomValues) => {
-			const type = customFields.find(
-				(x) => x._id === customValue.customField
-			)!.type;
+    if (!store) {
+      throw new Error('correspond store not found')
+    }
 
-			if (
-				!(
-					(type === Types.Date &&
-						typeof customValue.value === "object" &&
-						customValue.value instanceof Date) ||
-					type !== typeof customValue.value
-				)
-			) {
-				throw new Error("custom Field type not matched");
-			}
-		}, payload.customValues);
+    const inputCustomFieldIds = _.uniq(
+      R.map(
+        (customValue: DocumentCustomValues) => customValue.customField,
+        payload.customValues ?? []
+      )
+    )
 
-		const alreadyExistingCustomer = await this.customerRepository.find({
-			email: payload.email,
-		});
+    const customFields = await this.customFieldService.getCustomFieldsByModel(
+      payload.store,
+      Models.Customer
+    )
+    const requiredCustomFields = _.filter(customFields, (x) => x.required)
 
-		if (alreadyExistingCustomer) {
-			throw new Error("already existing Customer");
-		}
+    if (
+      _.filter(
+        inputCustomFieldIds,
+        (x) => _.findIndex(customFields, (y) => y._id.equals(x)) === -1
+      ).length
+    ) {
+      throw new Error('Correspond CustomField Not Found')
+    }
+    if (
+      _.filter(
+        requiredCustomFields,
+        (x) => _.findIndex(inputCustomFieldIds, (y) => x._id.equals(y)) === -1
+      ).length
+    ) {
+      throw new Error('required custom Field not entered')
+    }
+    R.map((customValue: DocumentCustomValues) => {
+      const type = customFields.find((x) =>
+        x._id.equals(customValue.customField)
+      )!.type
 
-		return await this.customerRepository.create(payload);
-	}
+      if (
+        !(
+          (type === Types.Date &&
+            typeof customValue.value === 'object' &&
+            customValue.value instanceof Date) ||
+          type === typeof customValue.value
+        )
+      ) {
+        throw new Error('custom Field type not matched')
+      }
+    }, payload.customValues ?? [])
+
+    const alreadyExistingCustomer = await this.customerRepository.find({
+      email: payload.email,
+      store: payload.store,
+    })
+
+    if (alreadyExistingCustomer.length) {
+      throw new Error('already existing Customer')
+    }
+
+    return await this.customerRepository.create(payload)
+  }
+  async deleteCustomValues(
+    storeId: string | Schema.Types.ObjectId,
+    customFieldId: string
+  ) {
+    return await this.customerRepository.removeCustomField(
+      storeId,
+      customFieldId
+    )
+  }
 }

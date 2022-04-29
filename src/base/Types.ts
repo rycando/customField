@@ -1,11 +1,14 @@
+/**
+ * 사용자 정의 필드에서 설정할 수 있는 타입
+ */
 export enum Types {
-	number = "number",
+  number = 'number',
 
-	string = "string",
+  string = 'string',
 
-	object = "object",
+  object = 'object',
 
-	boolean = "boolean",
+  boolean = 'boolean',
 
-	Date = "Date",
+  Date = 'Date',
 }

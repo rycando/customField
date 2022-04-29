@@ -1,32 +1,40 @@
-import { DocumentCustomField, CustomField } from "./entities/CustomField";
-import { Repository } from "~/base/Repository";
-import { injectable } from "tsyringe";
+import { injectable } from 'tsyringe'
+import { CustomField } from '~/CustomField'
 
 @injectable()
-export class CustomFieldRepository implements Repository<DocumentCustomField> {
-	async find(option?: any) {
-		return await CustomField.find(option);
-	}
-	async findOne(id?: string, option?: any) {
-		return await CustomField.findOne({ _id: id, ...option });
-	}
-	async create(payload: any) {
-		return await CustomField.create({
-			...payload,
-		});
-	}
-	async findOneAndUpdate(id: string, payload: any) {
-		return await CustomField.findOneAndUpdate(
-			{ _id: id },
-			{
-				...payload,
-			},
-			{ new: true }
-		);
-	}
-	async findOneAndDelete(id: string) {
-		return await CustomField.findOneAndDelete({
-			_id: id,
-		});
-	}
+export class CustomFieldRepository {
+  async find(option?: any, withDeleted?: boolean) {
+    return await CustomField.find({
+      ...option,
+      ...(withDeleted ? null : { deleted: false }),
+    })
+  }
+  async findOne(id?: string, option?: any) {
+    return await CustomField.findOne({
+      _id: id,
+      ...option,
+      deleted: false,
+    })
+  }
+  async create(payload: any) {
+    return await CustomField.create({
+      ...payload,
+    })
+  }
+  async findOneAndUpdate(id: string, payload: any) {
+    return await CustomField.findOneAndUpdate(
+      { _id: id, deleted: false },
+      {
+        ...payload,
+      },
+      { new: true }
+    )
+  }
+  async findOneAndDelete(id: string) {
+    const customField = await CustomField.findOne({
+      _id: id,
+      deleted: false,
+    })
+    return customField?.delete()
+  }
 }

@@ -1,1 +1,1 @@
-declare module "javascript-state-machine/lib/visualize";
+declare module 'javascript-state-machine/lib/visualize'

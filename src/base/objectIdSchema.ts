@@ -1,12 +1,4 @@
-import { ObjectId } from "bson";
-import * as yup from "yup";
-import { mixed } from "yup";
+import * as yup from 'yup'
 
-export const objectIdSchema = yup
-	.mixed<ObjectId>()
-	.test((input) => input instanceof ObjectId)
-	.transform((value: any, input, ctx) => {
-		if (ctx.isType(value)) return value;
-		return new ObjectId(value);
-	})
-	.required();
+/** ObjectId 타입 validation 스키마 */
+export const objectIdSchema = yup.string().length(24).required()
