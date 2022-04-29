@@ -190,13 +190,21 @@ export class OrderService {
 
     R.map((product: DocumentProduct) => (price += product.price), products)
 
-    return await this.orderRepository.create({ ...payload, price })
+    return (
+      await this.getOrderDTOs([
+        await this.orderRepository.create({ ...payload, price }),
+      ])
+    )?.[0]
   }
   async changeStatus(id: string, transition: OrderTransition) {
     const order = await this.orderRepository.findOne(id)
 
     return order
-      ? await this.orderStateMachine.changeState({ order, transition })
+      ? (
+          await this.getOrderDTOs([
+            await this.orderStateMachine.changeState({ order, transition }),
+          ])
+        )?.[0]
       : order
   }
 }
