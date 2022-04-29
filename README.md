@@ -44,12 +44,12 @@ $ ./start.sh
 
 #### 사용자 정의 필드 모델링
 
-> customField는 관리하기 편하도록 별도 필드로, 그에 해당하는 값인 customValue는 빠른 Read를 위해 모델 내에 저장
+> customField는 관리하기 편하도록 별도 필드로, 그에 해당하는 값인 customValue는 빠른 Read를 위해 모델 내에 저장  
 > 단, customValue와 customField가 연관관계를 유지해야하므로 customField \_id를 저장하는 별도 Document로 스키마 분리
 
 #### 타입 Validation
 
-> 사용자가 정의한 타입에 맞게 값을 저장할 수 있어야 함
+> 사용자가 정의한 타입에 맞게 값을 저장할 수 있어야 함  
 > enum 타입으로 설정할 수 있는 타입을 제한하고, type Validation을 통해 저장 전 확인
 
 ---
