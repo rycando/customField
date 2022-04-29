@@ -56,8 +56,9 @@ export class OrderService {
   async getOrderDTOs(orders: DocumentOrder[]) {
     const customerIds = R.map((order: DocumentOrder) => order.customer, orders)
 
-    const customers = await this.customerService.getCustomersByIds(customerIds)
-    const customerDTOs = await this.customerService.getCustomerDTOs(customers)
+    const customerDTOs = await this.customerService.getCustomersByIds(
+      customerIds
+    )
 
     const orderDTOs = await Promise.all(
       R.map(async (order: DocumentOrder) => {

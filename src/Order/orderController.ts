@@ -21,7 +21,13 @@ export class OrderController {
    * @returns OrderDTO[]
    */
   getAllOrders = async (req: Request, h: ResponseToolkit) => {
-    return h.response(await this.orderService.getAllOrders()).code(200)
+    return this.orderService
+      .getAllOrders()
+      .then((order) => h.response(order).code(200))
+      .catch((err: Error) => {
+        logger.info(`Log 45184: ${err}`)
+        return h.response(err.message).code(400)
+      })
   }
 
   /**
@@ -31,9 +37,15 @@ export class OrderController {
    * @returns OrderDTO
    */
   getOrderById = async (req: Request, h: ResponseToolkit) => {
-    return h.response(
-      (await this.orderService.getOrderById(req.params.id)) ?? undefined
-    )
+    return this.orderService
+      .getOrderById(req.params.id)
+      .then((order) => {
+        return h.response(order).code(200)
+      })
+      .catch((err: Error) => {
+        logger.info(`Log 60332: ${err}`)
+        return h.response(err.message).code(400)
+      })
   }
 
   /**
@@ -43,13 +55,13 @@ export class OrderController {
    * @returns OrderDTO[]
    */
   getStoreOrders = async (req: Request, h: ResponseToolkit) => {
-    try {
-      return h
-        .response(await this.orderService.getOrdersByStoreId(req.params.id))
-        .code(200)
-    } catch (e) {
-      console.log(e)
-    }
+    return this.orderService
+      .getOrdersByStoreId(req.params.id)
+      .then((order) => h.response(order).code(200))
+      .catch((err: Error) => {
+        logger.info(`Log 25202: ${err}`)
+        return h.response(err.message).code(400)
+      })
   }
 
   /////////////////////////////READ/////////////////////////////

@@ -23,52 +23,53 @@ export class CustomerService {
   ) {}
 
   getAllCustomers = async () => {
-    return await this.customerRepository.find()
+    return await this.getCustomerDTOs(await this.customerRepository.find())
   }
   async getCustomerById(id: string) {
-    return await this.customerRepository.findOne(id)
+    const customer = await this.customerRepository.findOne(id)
+    if (!customer) {
+      throw new Error('correspond Customer not found')
+    }
+    return (await this.getCustomerDTOs([customer]))[0]
   }
   async getCustomersByIds(ids: string[] | Schema.Types.ObjectId[]) {
-    return await this.customerRepository.find({
-      _id: { $in: ids },
-    })
+    return await this.getCustomerDTOs(
+      await this.customerRepository.find({
+        _id: { $in: ids },
+      })
+    )
   }
   async getCustomerDTOs(customers: DocumentCustomer[]) {
-    try {
-      return await Promise.all(
-        R.map(async (customer: DocumentCustomer) => {
-          const customFieldIds = R.map(
-            (customValue: DocumentCustomValues) => customValue.customField,
-            customer.customValues
-          )
-          let customValuesDTOs = R.map((customValue: DocumentCustomValues) => {
-            return new CustomValuesDTO(customValue)
-          }, customer.customValues)
-          const customFields =
-            await this.customFieldService.getCustomFieldsByIds(
-              Models.Customer,
-              customFieldIds
+    return await Promise.all(
+      R.map(async (customer: DocumentCustomer) => {
+        const customFieldIds = R.map(
+          (customValue: DocumentCustomValues) => customValue.customField,
+          customer.customValues
+        )
+        let customValuesDTOs = R.map((customValue: DocumentCustomValues) => {
+          return new CustomValuesDTO(customValue)
+        }, customer.customValues)
+        const customFields = await this.customFieldService.getCustomFieldsByIds(
+          Models.Customer,
+          customFieldIds
+        )
+
+        const extendedCustomValuesDTO = _.compact(
+          R.map((customValuesDTO: CustomValuesDTO) => {
+            const customField = _.find(customFields, (x) =>
+              (customValuesDTO.customField as ObjectID).equals(x._id)
             )
+            if (!customField) {
+              return null
+            }
+            customValuesDTO.customField = new CustomFieldDTO(customField)
+            return customValuesDTO
+          }, customValuesDTOs)
+        )
 
-          const extendedCustomValuesDTO = _.compact(
-            R.map((customValuesDTO: CustomValuesDTO) => {
-              const customField = _.find(customFields, (x) =>
-                (customValuesDTO.customField as ObjectID).equals(x._id)
-              )
-              if (!customField) {
-                return null
-              }
-              customValuesDTO.customField = new CustomFieldDTO(customField)
-              return customValuesDTO
-            }, customValuesDTOs)
-          )
-
-          return new CustomerDTO(customer, extendedCustomValuesDTO)
-        }, customers)
-      )
-    } catch (e) {
-      console.log(e)
-    }
+        return new CustomerDTO(customer, extendedCustomValuesDTO)
+      }, customers)
+    )
   }
   async getCustomersByStoreId(storeId: string) {
     const customers = await this.customerRepository.find({
@@ -139,8 +140,21 @@ export class CustomerService {
       throw new Error('already existing Customer')
     }
 
-    return await this.customerRepository.create(payload)
+    return (
+      (
+        await this.getCustomerDTOs([
+          await this.customerRepository.create(payload),
+        ])
+      )?.[0] ?? undefined
+    )
   }
+
+  /**
+   * customField에 해당하는 모든 customValues를 삭제합니다
+   * @param storeId
+   * @param customFieldId
+   * @returns
+   */
   async deleteCustomValues(
     storeId: string | Schema.Types.ObjectId,
     customFieldId: string

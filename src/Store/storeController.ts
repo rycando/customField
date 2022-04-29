@@ -26,7 +26,13 @@ export class StoreController {
    * @returns DocumentStore[]
    */
   getAllStores = async (req: Request, h: ResponseToolkit) => {
-    return h.response(await this.storeService.getAllStores()).code(200)
+    return this.storeService
+      .getAllStores()
+      .then((stores) => h.response(stores).code(200))
+      .catch((err: Error) => {
+        logger.info(`Log 48648: ${err}`)
+        return h.response(err.message).code(400)
+      })
   }
 
   /**
@@ -36,9 +42,15 @@ export class StoreController {
    * @returns DocumentStore
    */
   getStoreById = async (req: Request, h: ResponseToolkit) => {
-    return h.response(
-      (await this.storeService.getStoreById(req.params.id)) ?? undefined
-    )
+    return this.storeService
+      .getStoreById(req.params.id)
+      .then((store) => {
+        return h.response(store).code(200)
+      })
+      .catch((err: Error) => {
+        logger.info(`Log 16668: ${err}`)
+        return h.response(err.message).code(400)
+      })
   }
 
   /////////////////////////////READ/////////////////////////////

@@ -71,7 +71,6 @@ $ ./start.sh
 
 - javascript-state-machine 라이브러리 사용
 - orderStatus에 대한 Transition 미리 정의하여 각 단계에서 변화할 수 있는 status 제한
-
   ![state-machine-visualize](https://user-images.githubusercontent.com/51469261/165961345-a92022df-2e5a-43ac-a0fd-b3dcc1efe89a.svg)
 
 ---

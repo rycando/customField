@@ -14,7 +14,13 @@ export class CustomFieldService {
     return await this.customFieldRepository.find()
   }
   async getCustomFieldById(id: string) {
-    return await this.customFieldRepository.findOne(id)
+    const customField = await this.customFieldRepository.findOne(id)
+
+    if (!customField) {
+      throw new Error('correspond CustomField not found')
+    }
+
+    return customField
   }
   async getCustomFieldsByIds(
     model: Models,

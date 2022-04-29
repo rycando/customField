@@ -26,10 +26,16 @@ export class ProductService {
   ) {}
 
   getAllProducts = async () => {
-    return await this.productRepository.find()
+    return await this.getProductDTOs(await this.productRepository.find())
   }
   async getProductById(id: string) {
-    return await this.productRepository.findOne(id)
+    const product = await this.productRepository.findOne(id)
+
+    if (!product) {
+      throw new Error('correspond product not found')
+    }
+
+    return (await this.getProductDTOs([product]))[0]
   }
 
   async getProductDTOs(products: DocumentProduct[]) {

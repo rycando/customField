@@ -24,7 +24,13 @@ export class CustomerController {
    * @returns UserDTO[]
    */
   getAllCustomers = async (req: Request, h: ResponseToolkit) => {
-    return h.response(await this.customerService.getAllCustomers()).code(200)
+    return this.customerService
+      .getAllCustomers()
+      .then((customer) => h.response(customer).code(200))
+      .catch((err: Error) => {
+        logger.info(`Log 23703: ${err}`)
+        return h.response(err.message).code(400)
+      })
   }
 
   /**
@@ -34,9 +40,15 @@ export class CustomerController {
    * @returns UserDTO
    */
   getCustomerById = async (req: Request, h: ResponseToolkit) => {
-    return h.response(
-      (await this.customerService.getCustomerById(req.params.id)) ?? undefined
-    )
+    return this.customerService
+      .getCustomerById(req.params.id)
+      .then((customer) => {
+        return h.response(customer).code(200)
+      })
+      .catch((err: Error) => {
+        logger.info(`Log 29425: ${err}`)
+        return h.response(err.message).code(400)
+      })
   }
 
   /**
@@ -46,9 +58,13 @@ export class CustomerController {
    * @returns UserDTO[]
    */
   getStoreCustomers = async (req: Request, h: ResponseToolkit) => {
-    return h
-      .response(await this.customerService.getCustomersByStoreId(req.params.id))
-      .code(200)
+    return this.customerService
+      .getCustomersByStoreId(req.params.id)
+      .then((customer) => h.response(customer).code(200))
+      .catch((err: Error) => {
+        logger.info(`Log 58259: ${err}`)
+        return h.response(err.message).code(400)
+      })
   }
 
   /////////////////////////////READ/////////////////////////////

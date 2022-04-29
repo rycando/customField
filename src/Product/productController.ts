@@ -24,7 +24,13 @@ export class ProductController {
    * @returns ProductDTO[]
    */
   getAllProducts = async (req: Request, h: ResponseToolkit) => {
-    return h.response(await this.productService.getAllProducts()).code(200)
+    return this.productService
+      .getAllProducts()
+      .then((products) => h.response(products).code(200))
+      .catch((err: Error) => {
+        logger.info(`Log 44382: ${err}`)
+        return h.response(err.message).code(400)
+      })
   }
 
   /**
@@ -34,11 +40,13 @@ export class ProductController {
    * @returns ProductDTO
    */
   getProductById = async (req: Request, h: ResponseToolkit) => {
-    return h
-      .response(
-        (await this.productService.getProductById(req.params.id)) ?? undefined
-      )
-      .code(200)
+    return this.productService
+      .getProductById(req.params.id)
+      .then((product) => h.response(product).code(200))
+      .catch((err: Error) => {
+        logger.info(`Log 31365: ${err}`)
+        return h.response(err.message).code(400)
+      })
   }
 
   /**
@@ -48,9 +56,13 @@ export class ProductController {
    * @returns ProductDTO
    */
   getStoreProducts = async (req: Request, h: ResponseToolkit) => {
-    return h
-      .response(await this.productService.getProdcutsByStoreId(req.params.id))
-      .code(200)
+    return this.productService
+      .getProdcutsByStoreId(req.params.id)
+      .then((products) => h.response(products).code(200))
+      .catch((err: Error) => {
+        logger.info(`Log 49379: ${err}`)
+        return h.response(err.message).code(400)
+      })
   }
 
   /////////////////////////////READ/////////////////////////////

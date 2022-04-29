@@ -33,9 +33,13 @@ export class CustomFieldController {
    * @returns DocumentCustomerField[]
    */
   getAllCustomFields = async (req: Request, h: ResponseToolkit) => {
-    return h
-      .response(await this.customFieldService.getAllCustomFields())
-      .code(200)
+    return this.customFieldService
+      .getAllCustomFields()
+      .then((customFields) => h.response(customFields).code(200))
+      .catch((err: Error) => {
+        logger.info(`Log 10291: ${err}`)
+        return h.response(err.message).code(400)
+      })
   }
 
   /**
@@ -45,10 +49,13 @@ export class CustomFieldController {
    * @returns DocumentCustomerField | undefined
    */
   getCustomFieldById = async (req: Request, h: ResponseToolkit) => {
-    return h.response(
-      (await this.customFieldService.getCustomFieldById(req.params.id)) ??
-        undefined
-    )
+    return this.customFieldService
+      .getCustomFieldById(req.params.id)
+      .then((customField) => h.response(customField).code(200))
+      .catch((err: Error) => {
+        logger.info(`Log 34746: ${err}`)
+        return h.response(err.message).code(400)
+      })
   }
 
   /////////////////////////////READ/////////////////////////////

@@ -12,7 +12,11 @@ export class StoreService {
     return await this.storeRepository.find()
   }
   async getStoreById(id: string) {
-    return await this.storeRepository.findOne(id)
+    const store = await this.storeRepository.findOne(id)
+    if (!store) {
+      throw new Error('correspond store not found')
+    }
+    return store
   }
   async createNewStore(payload: createStoreDTO) {
     const alreadyExistingStore = await this.storeRepository.find({
