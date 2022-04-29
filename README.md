@@ -58,9 +58,21 @@ $ ./start.sh
 
 #### DI, IOC
 
+- DI(Dependency Injection) 을 통해 모듈 간 결합도 감소
+- tsyringe 라이브러리를 이용해 IOC(Inversion Of Control)로 자원낭비 감소 / 재사용성 향상
+
 #### 계층형 아키텍쳐
 
+- Router - Controller - Service - Repository 구조
+- 재사용성 향상
+- 결합도를 낮춰 변화에 용이
+
 #### State-Machine
+
+- javascript-state-machine 라이브러리 사용
+- orderStatus에 대한 Transition 미리 정의하여 각 단계에서 변화할 수 있는 status 제한
+
+  ![state-machine-visualize](https://user-images.githubusercontent.com/51469261/165961345-a92022df-2e5a-43ac-a0fd-b3dcc1efe89a.svg)
 
 ---
 
@@ -71,3 +83,11 @@ $ ./start.sh
 - Postman에서 test/ 디렉토리 내 json 파일 import
 - environment local로 설정
 - collection 내에 있는 Request로 테스트
+
+### 구현하지 못하거나 아쉬운 부분
+
+- 일부 update API를 구현하지 못했습니다.
+- 테스트 편의를 위해 pagination을 생략하였습니다.
+  - 실제로 구현한다면 커머스 특성상 skip (offset)을 이용한 페이지네이션 보다는 cursor based 페이지네이션을 이용할 것 같습니다.
+  - (ex) startId, endId 저장 후 \$gt, $lt 조건으로 쿼리
+- DTO 객체를 만드는 과정에서 과도하게 map을 돌거나 불필요하게 쿼리하는 부분이 있습니다.
